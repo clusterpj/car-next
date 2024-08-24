@@ -39,10 +39,14 @@ export const authOptions: AuthOptions = {
           throw new Error('Please enter an email and password')
         }
       
-        const user = await User.findOne({ email: credentials.email })
+        const user = await User.findOne({ email: credentials.email }).select('+password')
       
         if (!user) {
           throw new Error('No user found with this email')
+        }
+      
+        if (!user.password) {
+          throw new Error('User password is not set')
         }
       
         const isPasswordMatch = await user.comparePassword(credentials.password)

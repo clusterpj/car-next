@@ -1,7 +1,7 @@
 // src/pages/login.tsx
 import { useState } from 'react'
 import { useRouter } from 'next/router'
-import { signIn } from 'next-auth/react'
+import { signIn, getCsrfToken } from 'next-auth/react'
 import Head from 'next/head'
 import Link from 'next/link'
 import { useForm } from 'react-hook-form'
@@ -20,7 +20,7 @@ const schema = yup.object({
 
 type FormData = yup.InferType<typeof schema>
 
-const LoginPage = () => {
+const LoginPage = ({ csrfToken }: { csrfToken: string }) => {
   const [error, setError] = useState<string | null>(null)
   const router = useRouter()
   const { register, handleSubmit, formState: { errors } } = useForm<FormData>({
@@ -33,12 +33,13 @@ const LoginPage = () => {
         redirect: false,
         email: data.email,
         password: data.password,
+        callbackUrl: '/'
       })
 
       if (result?.error) {
         setError(result.error)
-      } else {
-        router.push('/')
+      } else if (result?.url) {
+        router.push(result.url)
       }
     } catch (error) {
       setError('An unexpected error occurred. Please try again.')
@@ -58,6 +59,7 @@ const LoginPage = () => {
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+              <input name="csrfToken" type="hidden" defaultValue={csrfToken} />
               <div className="space-y-2">
                 <Label htmlFor="email">Email address</Label>
                 <Input

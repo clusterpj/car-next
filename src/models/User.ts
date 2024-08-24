@@ -1,6 +1,7 @@
 import mongoose from 'mongoose'
 import bcrypt from 'bcryptjs'
 import validator from 'validator'
+import crypto from 'crypto';
 
 export interface IUser extends mongoose.Document {
   name: string;
@@ -61,8 +62,11 @@ userSchema.pre('save', async function (next) {
   next()
 })
 
-userSchema.methods.comparePassword = async function (candidatePassword: string) {
-  return bcrypt.compare(candidatePassword, this.password)
+userSchema.methods.comparePassword = async function(candidatePassword: string): Promise<boolean> {
+  if (!this.password) {
+    return false;
+  }
+  return bcrypt.compare(candidatePassword, this.password);
 }
 
 userSchema.methods.generatePasswordResetToken = async function () {
