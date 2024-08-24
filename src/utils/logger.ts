@@ -21,32 +21,37 @@ const colors = {
 // Tell winston that you want to link the colors 
 winston.addColors(colors);
 
-// Create the logger instance
-const logger = winston.createLogger({
-  level: process.env.NODE_ENV === 'development' ? 'debug' : 'warn',
-  levels,
-  format: winston.format.combine(
-    winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss:ms' }),
-    winston.format.colorize({ all: true }),
-    winston.format.printf(
-      (info) => `${info.timestamp} ${info.level}: ${info.message}`,
+// Function to create the logger instance
+const createLogger = (name: string = 'default') => {
+  return winston.createLogger({
+    level: process.env.NODE_ENV === 'development' ? 'debug' : 'warn',
+    levels,
+    format: winston.format.combine(
+      winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss:ms' }),
+      winston.format.colorize({ all: true }),
+      winston.format.printf(
+        (info) => `${info.timestamp} ${info.level}: [${name}] ${info.message}`,
+      ),
     ),
-  ),
-  transports: [
-    // Write all logs with level `error` and below to `error.log`
-    new winston.transports.File({ filename: 'logs/error.log', level: 'error' }),
-    // Write all logs with level `info` and below to `combined.log`
-    new winston.transports.File({ filename: 'logs/combined.log' }),
-    // Write all logs to console
-    new winston.transports.Console(),
-  ],
-});
+    transports: [
+      new winston.transports.File({ filename: 'logs/error.log', level: 'error' }),
+      new winston.transports.File({ filename: 'logs/combined.log' }),
+      new winston.transports.Console(),
+    ],
+  });
+};
+
+// Create the default logger instance
+const defaultLogger = createLogger();
 
 // Create a stream object with a 'write' function that will be used by `morgan`
 export const stream = {
   write: (message: string) => {
-    logger.http(message);
+    defaultLogger.http(message);
   },
 };
 
-export default logger;
+export { createLogger };
+export default defaultLogger;
+
+

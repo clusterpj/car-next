@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { getSession } from 'next-auth/react'
 import dbConnect from '@/lib/db'
-import Vehicle from '@/models/Vehicle'
+import Vehicle, { IVehicle } from '@/models/Vehicle'
 import { withAuth } from '@/middleware/auth'
 import { withRateLimit } from '@/middleware/rateLimit'
 import { validateRequest } from '@/middleware/validateRequest'
@@ -26,6 +26,14 @@ interface ErrorResponse {
   errors?: string[];
 }
 
+interface PaginatedVehicleResponse {
+  vehicles: IVehicle[];
+  totalPages: number;
+  currentPage: number;
+  totalVehicles: number;
+}
+
+
 // Helper function to validate vehicle data
 const validateVehicleData = (data: any, isUpdate: boolean = false) => {
   const errors = [];
@@ -49,7 +57,7 @@ const validateVehicleData = (data: any, isUpdate: boolean = false) => {
 
 async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<Vehicle[] | Vehicle | ErrorResponse>
+  res: NextApiResponse<PaginatedVehicleResponse | IVehicle | ErrorResponse>
 ) {
   await dbConnect();
 
@@ -94,7 +102,7 @@ async function handler(
 
         res.setHeader('Cache-Control', 'public, max-age=60, stale-while-revalidate=30');
         res.status(200).json({
-          vehicles,
+          vehicles: vehicles as IVehicle[],
           totalPages: Math.ceil(total / Number(limit)),
           currentPage: Number(page),
           totalVehicles: total
@@ -119,7 +127,7 @@ async function handler(
 
         const vehicle = await Vehicle.create(req.body);
         logger.info(`New vehicle created: ${vehicle._id}`);
-        res.status(201).json(vehicle);
+        res.status(201).json(vehicle as IVehicle);
       } catch (error) {
         logger.error('Error creating vehicle:', error);
         if (error.code === 11000) {
@@ -158,7 +166,7 @@ async function handler(
         }
 
         logger.info(`Vehicle updated: ${id}`);
-        res.status(200).json(updatedVehicle);
+        res.status(200).json(updatedVehicle as IVehicle);
       } catch (error) {
         logger.error('Error updating vehicle:', error);
         if (error.kind === 'ObjectId') {
