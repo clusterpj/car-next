@@ -2,7 +2,7 @@ import { NextApiHandler, NextApiRequest, NextApiResponse } from 'next'
 import rateLimit from 'express-rate-limit'
 import { createLogger } from '@/utils/logger'
 
-const logger = createLogger('rate-limit-middleware')
+const logger = createLogger('rate-limit')
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes

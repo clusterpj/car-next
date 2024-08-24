@@ -1,85 +1,205 @@
-// File: src/components/Layout.tsx
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import Head from 'next/head';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useRouter } from 'next/router';
+import { useSession } from 'next-auth/react';
+import { useTheme } from 'next-themes';
+import { SunIcon, MoonIcon, GlobeAltIcon, UserIcon, Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 
 interface LayoutProps {
   children: React.ReactNode;
+  title?: string;
+  description?: string;
 }
 
-const Layout: React.FC<LayoutProps> = ({ children }) => {
+const Layout: React.FC<LayoutProps> = ({ 
+  children, 
+  title = 'LuxeDrive Car Rentals', 
+  description = 'Premium car rentals in the Dominican Republic' 
+}) => {
   const router = useRouter();
+  const { data: session } = useSession();
+  const { theme, setTheme } = useTheme();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
-  const isActive = (pathname: string) => router.pathname === pathname;
+  useEffect(() => setMounted(true), []);
+
+  const isActive = (pathname: string): boolean => router.pathname === pathname;
+
+  const navItems = [
+    { href: '/fleet', label: 'Our Fleet' },
+    { href: '/locations', label: 'Locations' },
+    { href: '/about', label: 'About Us' },
+  ];
+
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
+  const toggleTheme = () => {
+    setTheme(theme === 'light' ? 'dark' : 'light');
+  };
+
+  const changeLanguage = (lang: string) => {
+    router.push(router.pathname, router.asPath, { locale: lang });
+  };
+
+  if (!mounted) return null;
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <header className="bg-white shadow-md">
-        <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-          <Link href="/" className="text-3xl font-bold text-blue-600">
-            LuxeDrive
-          </Link>
-          <div className="space-x-6">
-            <Link
-              href="/fleet"
-              className={`${
-                isActive('/fleet') ? 'text-blue-600' : 'text-gray-600'
-              } hover:text-blue-600 transition`}
-            >
-              Our Fleet
+    <div className={`min-h-screen flex flex-col ${theme === 'dark' ? 'dark' : ''}`}>
+      <Head>
+        <title>{title}</title>
+        <meta name="description" content={description} />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+
+      <header className="bg-white dark:bg-gray-800 shadow-md">
+        <nav className="container mx-auto px-4 py-4">
+          <div className="flex justify-between items-center">
+            {/* Left section - Logo */}
+            <Link href="/" className="text-3xl font-bold text-blue-600 dark:text-blue-400" aria-label="LuxeDrive Home">
+              LuxeDrive
             </Link>
-            <Link
-              href="/locations"
-              className={`${
-                isActive('/locations') ? 'text-blue-600' : 'text-gray-600'
-              } hover:text-blue-600 transition`}
-            >
-              Locations
-            </Link>
-            <Link
-              href="/about"
-              className={`${
-                isActive('/about') ? 'text-blue-600' : 'text-gray-600'
-              } hover:text-blue-600 transition`}
-            >
-              About Us
-            </Link>
-            <Link
-              href="/booking"
-              className="bg-blue-600 text-white px-4 py-2 rounded-full hover:bg-blue-700 transition"
-            >
-              Book Now
-            </Link>
+
+            {/* Center section - Main navigation (hidden on mobile) */}
+            <div className="hidden lg:flex items-center space-x-6">
+              {navItems.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`${
+                    isActive(item.href)
+                      ? 'text-blue-600 dark:text-blue-400'
+                      : 'text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400'
+                  } transition duration-300`}
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </div>
+
+            {/* Right section - Theme toggle, language, user menu, and mobile menu button */}
+            <div className="flex items-center space-x-4">
+              <button onClick={toggleTheme} className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700" aria-label="Toggle theme">
+                {theme === 'light' ? <MoonIcon className="h-6 w-6" /> : <SunIcon className="h-6 w-6" />}
+              </button>
+              <button 
+                onClick={() => changeLanguage(router.locale === 'en' ? 'es' : 'en')}
+                className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700"
+                aria-label="Change language"
+              >
+                <GlobeAltIcon className="h-6 w-6" />
+              </button>
+              {session ? (
+                <Link href="/profile" className="flex items-center space-x-2 p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700">
+                  <UserIcon className="h-6 w-6" />
+                  <span className="hidden lg:inline">{session.user.name}</span>
+                </Link>
+              ) : (
+                <Link href="/login" className="p-2 text-blue-600 dark:text-blue-400 hover:underline">
+                  Log In
+                </Link>
+              )}
+              <button 
+                className="lg:hidden p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700"
+                onClick={toggleMobileMenu}
+                aria-label="Toggle menu"
+              >
+                {isMobileMenuOpen ? (
+                  <XMarkIcon className="h-6 w-6" />
+                ) : (
+                  <Bars3Icon className="h-6 w-6" />
+                )}
+              </button>
+            </div>
+          </div>
+
+          {/* Mobile menu */}
+          <div className={`lg:hidden mt-4 ${isMobileMenuOpen ? 'block' : 'hidden'}`}>
+            <ul className="flex flex-col space-y-2">
+              {navItems.map((item) => (
+                <li key={item.href}>
+                  <Link
+                    href={item.href}
+                    className={`block py-2 ${
+                      isActive(item.href)
+                        ? 'text-blue-600 dark:text-blue-400'
+                        : 'text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400'
+                    } transition duration-300`}
+                  >
+                    {item.label}
+                  </Link>
+                </li>
+              ))}
+              <li>
+                <Link
+                  href="/booking"
+                  className="inline-block mt-2 px-6 py-2 bg-blue-600 text-white dark:bg-blue-500 dark:text-gray-100 rounded-full hover:bg-blue-700 dark:hover:bg-blue-600 transition duration-300"
+                >
+                  Book Now
+                </Link>
+              </li>
+            </ul>
           </div>
         </nav>
       </header>
 
-      <main className="flex-grow">{children}</main>
+      <main className="flex-grow dark:bg-gray-900 dark:text-white">
+        {children}
+      </main>
 
-      <footer className="bg-gray-800 text-white py-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row justify-between items-center mb-8">
-            <div className="text-2xl font-bold mb-4 md:mb-0">LuxeDrive</div>
-            <div className="flex flex-wrap justify-center md:justify-end space-x-4">
-              <Link href="/terms" className="hover:text-blue-400 transition">
-                Terms of Service
-              </Link>
-              <Link href="/privacy" className="hover:text-blue-400 transition">
-                Privacy Policy
-              </Link>
-              <Link href="/contact" className="hover:text-blue-400 transition">
-                Contact Us
-              </Link>
-              <Link href="/faq" className="hover:text-blue-400 transition">
-                FAQ
-              </Link>
+      <footer className="bg-gray-800 dark:bg-gray-900 text-white py-8">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div>
+              <h3 className="text-2xl font-bold mb-4">LuxeDrive</h3>
+              <p className="mb-4">Premium car rentals in the Dominican Republic</p>
+              <div className="flex space-x-4">
+                {['facebook', 'twitter', 'instagram'].map((social) => (
+                  <a
+                    key={social}
+                    href={`https://www.${social}.com/luxedrive`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-gray-400 hover:text-white transition duration-300"
+                    aria-label={`Follow us on ${social}`}
+                  >
+                    <Image 
+                      src={`/images/${social}-icon.svg`} 
+                      alt={`${social} icon`} 
+                      width={24} 
+                      height={24} 
+                    />
+                  </a>
+                ))}
+              </div>
+            </div>
+            <div>
+              <h4 className="text-xl font-semibold mb-4">Quick Links</h4>
+              <ul className="space-y-2">
+                {navItems.map((item) => (
+                  <li key={item.href}>
+                    <Link href={item.href} className="hover:text-blue-400 transition duration-300">
+                      {item.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div>
+              <h4 className="text-xl font-semibold mb-4">Contact Us</h4>
+              <address className="not-italic">
+                <p>123 Main St, Santo Domingo</p>
+                <p>Dominican Republic</p>
+                <p className="mt-2">Phone: +1 (809) 555-1234</p>
+                <p>Email: info@luxedrive.com</p>
+              </address>
             </div>
           </div>
-          <div className="flex justify-center space-x-6 mb-8">
-            {/* Social media icons */}
-            {/* ... (social media SVG icons) ... */}
-          </div>
-          <div className="text-center text-gray-400">
+          <div className="mt-8 pt-4 border-t border-gray-700 text-center text-gray-400">
             &copy; {new Date().getFullYear()} LuxeDrive Rentals. All rights reserved.
           </div>
         </div>

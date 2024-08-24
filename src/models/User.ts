@@ -1,5 +1,6 @@
 // File: src/models/User.ts
 import mongoose from 'mongoose'
+import bcrypt from 'bcryptjs'
 
 const userSchema = new mongoose.Schema({
   name: { type: String, required: true },
@@ -9,4 +10,24 @@ const userSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now },
 })
 
-export default mongoose.models.User || mongoose.model('User', userSchema)
+userSchema.pre('save', async function (next) {
+  if (this.isModified('password')) {
+    this.password = await bcrypt.hash(this.password, 10)
+  }
+  next()
+})
+
+userSchema.methods.comparePassword = async function (candidatePassword: string) {
+  return bcrypt.compare(candidatePassword, this.password)
+}
+
+export interface IUser extends mongoose.Document {
+  name: string;
+  email: string;
+  password: string;
+  role: 'admin' | 'customer';
+  createdAt: Date;
+  comparePassword(candidatePassword: string): Promise<boolean>;
+}
+
+export default mongoose.models.User || mongoose.model<IUser>('User', userSchema)

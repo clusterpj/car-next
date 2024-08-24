@@ -2,7 +2,7 @@
 import type { NextPage } from 'next';
 import Image from 'next/image';
 import { useState } from 'react';
-import { ChevronRightIcon } from '@heroicons/react/24/solid';
+import { ChevronRightIcon } from '@heroicons/react/20/solid';
 
 const Home: NextPage = () => {
   const [email, setEmail] = useState('');

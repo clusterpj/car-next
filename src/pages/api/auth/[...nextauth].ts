@@ -3,7 +3,6 @@ import NextAuth from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import dbConnect from '@/lib/db'
 import User from '@/models/User'
-import bcrypt from 'bcryptjs'
 
 export default NextAuth({
   providers: [
@@ -16,15 +15,23 @@ export default NextAuth({
       async authorize(credentials) {
         await dbConnect()
 
-        if (credentials == null) return null
+        if (!credentials?.email || !credentials?.password) {
+          throw new Error('Please enter an email and password')
+        }
 
         const user = await User.findOne({ email: credentials.email })
 
-        if (user && bcrypt.compareSync(credentials.password, user.password)) {
-          return { id: user._id, email: user.email, role: user.role }
+        if (!user) {
+          throw new Error('No user found with this email')
         }
 
-        return null
+        const isPasswordMatch = await user.comparePassword(credentials.password)
+
+        if (!isPasswordMatch) {
+          throw new Error('Invalid password')
+        }
+
+        return { id: user._id, email: user.email, name: user.name, role: user.role }
       }
     })
   ],
@@ -36,7 +43,9 @@ export default NextAuth({
       return token
     },
     async session({ session, token }) {
-      session.user.role = token.role
+      if (session.user) {
+        session.user.role = token.role as string
+      }
       return session
     }
   },
