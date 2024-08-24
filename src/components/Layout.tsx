@@ -3,9 +3,9 @@ import Head from 'next/head';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import { useSession, signIn, signOut } from 'next-auth/react';
+import { useSession, signOut } from 'next-auth/react';
 import { useTheme } from 'next-themes';
-import { ShieldCheckIcon,SunIcon, MoonIcon, GlobeAltIcon, UserIcon, Bars3Icon, XMarkIcon, ArrowRightOnRectangleIcon } from '@heroicons/react/24/outline';
+import { ShieldCheckIcon, SunIcon, MoonIcon, GlobeAltIcon, UserIcon, Bars3Icon, XMarkIcon, ArrowRightOnRectangleIcon } from '@heroicons/react/24/outline';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -64,14 +64,14 @@ const Layout: React.FC<LayoutProps> = ({
   if (!mounted) return null;
 
   return (
-    <div className={`min-h-screen flex flex-col ${theme === 'dark' ? 'dark' : ''}`}>
+    <div className="min-h-screen flex flex-col bg-background text-foreground">
       <Head>
         <title>{title}</title>
         <meta name="description" content={description} />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <header className="bg-blue-600 dark:bg-gray-800 shadow-md text-white">
+      <header className="bg-card text-card-foreground shadow-md">
         <nav className="container mx-auto px-4 py-4">
           <div className="flex justify-between items-center">
             {/* Left section - Logo */}
@@ -222,7 +222,7 @@ const Layout: React.FC<LayoutProps> = ({
         {children}
       </main>
 
-      <footer className="bg-gray-800 dark:bg-gray-900 text-white py-8">
+      <footer className="bg-card text-card-foreground py-8">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div>
