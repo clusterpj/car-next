@@ -1,36 +1,160 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# LuxeDrive Car Rental App
+
+## Overview
+
+LuxeDrive is a modern, full-stack car rental application built for the Dominican Republic market. It provides an efficient admin dashboard for car rental businesses and an intuitive interface for customers to rent luxury vehicles.
+
+### Tech Stack
+
+- **Frontend**: Next.js, React, TypeScript, Tailwind CSS
+- **Backend**: Node.js, Express.js
+- **Database**: MongoDB
+- **Authentication**: NextAuth.js
+- **API**: RESTful API with advanced features
+- **Testing**: Jest
+- **Deployment**: Docker (planned)
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- Node.js (v14 or later)
+- MongoDB
+- Docker (for running MongoDB, optional)
+
+### Installation
+
+1. Clone the repository:
+   ```
+   git clone https://github.com/your-username/luxedrive-car-rental.git
+   cd luxedrive-car-rental
+   ```
+
+2. Install dependencies:
+   ```
+   npm install
+   ```
+
+3. Set up environment variables:
+   Create a `.env.local` file in the root directory and add the following:
+   ```
+   MONGODB_URI=mongodb://localhost:27017/car_rental_db
+   NEXTAUTH_SECRET=your_nextauth_secret
+   NEXTAUTH_URL=http://localhost:3000
+   ```
+
+4. Start the development server:
+   ```
+   npm run dev
+   ```
+
+5. Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+## Key Features
+
+- User authentication (admin and customer roles)
+- Vehicle management (CRUD operations)
+- Booking system
+- Admin dashboard
+- Customer-facing car browsing and reservation
+- Advanced filtering and pagination for vehicle listings
+- Rate limiting and CORS protection
+- Comprehensive error handling and logging
+
+## Project Structure
+
+```
+luxedrive-car-rental/
+├── src/
+│   ├── components/
+│   │   ├── admin/
+│   │   │   ├── CarManagement.tsx
+│   │   │   └── RentalManagement.tsx
+│   │   ├── customer/
+│   │   │   ├── BookingForm.tsx
+│   │   │   └── CarList.tsx
+│   │   └── Layout.tsx
+│   ├── lib/
+│   │   ├── api.ts
+│   │   ├── db.ts
+│   │   └── mongodb.ts
+│   ├── middleware/
+│   │   ├── auth.ts
+│   │   ├── cors.ts
+│   │   ├── rateLimit.ts
+│   │   └── validateRequest.ts
+│   ├── models/
+│   │   ├── Rental.ts
+│   │   ├── User.ts
+│   │   └── Vehicle.ts
+│   ├── pages/
+│   │   ├── api/
+│   │   │   ├── auth/
+│   │   │   │   └── [...nextauth].ts
+│   │   │   └── vehicles/
+│   │   │       └── index.ts
+│   │   ├── admin/
+│   │   │   ├── dashboard.tsx
+│   │   │   ├── cars.tsx
+│   │   │   └── rentals.tsx
+│   │   ├── customer/
+│   │   │   ├── booking.tsx
+│   │   │   └── search.tsx
+│   │   ├── _app.tsx
+│   │   └── index.tsx
+│   ├── styles/
+│   │   └── globals.css
+│   ├── types/
+│   │   └── index.ts
+│   └── utils/
+│       ├── auth.ts
+│       ├── helpers.ts
+│       └── logger.ts
+├── public/
+├── tests/
+│   └── api/
+│       └── vehicles.test.ts
+├── .env.local
+├── next.config.js
+├── package.json
+├── README.md
+├── tailwind.config.js
+└── tsconfig.json
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Development Guidelines
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Code Style
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+- We use ESLint for linting and Prettier for code formatting.
+- Run `npm run lint` to check for linting errors.
+- Run `npm run format` to automatically format code.
 
-## Learn More
+### API Development
 
-To learn more about Next.js, take a look at the following resources:
+- All API routes should be placed in the `src/pages/api` directory.
+- Use the provided middleware (auth, rate limiting, CORS) for all API routes.
+- Implement proper error handling and use the custom logger for all API operations.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Testing
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+- Write unit tests for all API routes and utility functions.
+- Place test files in the `tests` directory, mirroring the `src` directory structure.
+- Run tests using `npm test`.
 
-## Deploy on Vercel
+### Commit Guidelines
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- Use conventional commit messages: `type(scope): description`
+- Types: feat, fix, docs, style, refactor, test, chore
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+## Deployment
+
+(Instructions for deployment will be added in future updates)
+
+## Contributing
+
+Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
