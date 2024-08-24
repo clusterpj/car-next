@@ -3,9 +3,9 @@ import Head from 'next/head';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import { useSession } from 'next-auth/react';
+import { useSession, signIn, signOut } from 'next-auth/react';
 import { useTheme } from 'next-themes';
-import { SunIcon, MoonIcon, GlobeAltIcon, UserIcon, Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
+import { ShieldCheckIcon,SunIcon, MoonIcon, GlobeAltIcon, UserIcon, Bars3Icon, XMarkIcon, ArrowRightOnRectangleIcon } from '@heroicons/react/24/outline';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -20,8 +20,10 @@ const Layout: React.FC<LayoutProps> = ({
 }) => {
   const router = useRouter();
   const { data: session } = useSession();
+  const userRole = session?.user?.role || 'guest';
   const { theme, setTheme } = useTheme();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => setMounted(true), []);
@@ -34,8 +36,21 @@ const Layout: React.FC<LayoutProps> = ({
     { href: '/about', label: 'About Us' },
   ];
 
+  const handleSignIn = () => {
+    router.push('/login');
+  };
+
+  const handleSignOut = async () => {
+    await signOut({ redirect: false });
+    router.push('/');
+  };
+
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
+  const toggleUserMenu = () => {
+    setIsUserMenuOpen(!isUserMenuOpen);
   };
 
   const toggleTheme = () => {
@@ -56,11 +71,11 @@ const Layout: React.FC<LayoutProps> = ({
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <header className="bg-white dark:bg-gray-800 shadow-md">
+      <header className="bg-blue-600 dark:bg-gray-800 shadow-md text-white">
         <nav className="container mx-auto px-4 py-4">
           <div className="flex justify-between items-center">
             {/* Left section - Logo */}
-            <Link href="/" className="text-3xl font-bold text-blue-600 dark:text-blue-400" aria-label="LuxeDrive Home">
+            <Link href="/" className="text-3xl font-bold text-white" aria-label="LuxeDrive Home">
               LuxeDrive
             </Link>
 
@@ -72,8 +87,8 @@ const Layout: React.FC<LayoutProps> = ({
                   href={item.href}
                   className={`${
                     isActive(item.href)
-                      ? 'text-blue-600 dark:text-blue-400'
-                      : 'text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400'
+                      ? 'text-white font-semibold'
+                      : 'text-blue-100 hover:text-white'
                   } transition duration-300`}
                 >
                   {item.label}
@@ -83,35 +98,65 @@ const Layout: React.FC<LayoutProps> = ({
 
             {/* Right section - Theme toggle, language, user menu, and mobile menu button */}
             <div className="flex items-center space-x-4">
-              <button onClick={toggleTheme} className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700" aria-label="Toggle theme">
-                {theme === 'light' ? <MoonIcon className="h-6 w-6" /> : <SunIcon className="h-6 w-6" />}
+              <button onClick={toggleTheme} className="p-2 rounded-full hover:bg-blue-700 dark:hover:bg-gray-700" aria-label="Toggle theme">
+                {theme === 'light' ? <MoonIcon className="h-6 w-6 text-white" /> : <SunIcon className="h-6 w-6 text-white" />}
               </button>
               <button 
                 onClick={() => changeLanguage(router.locale === 'en' ? 'es' : 'en')}
-                className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700"
+                className="p-2 rounded-full hover:bg-blue-700 dark:hover:bg-gray-700"
                 aria-label="Change language"
               >
-                <GlobeAltIcon className="h-6 w-6" />
+                <GlobeAltIcon className="h-6 w-6 text-white" />
               </button>
               {session ? (
-                <Link href="/profile" className="flex items-center space-x-2 p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700">
-                  <UserIcon className="h-6 w-6" />
-                  <span className="hidden lg:inline">{session.user.name}</span>
-                </Link>
+                <div className="relative">
+                  <button
+                    onClick={toggleUserMenu}
+                    className="flex items-center space-x-2 p-2 rounded-full hover:bg-blue-700 dark:hover:bg-gray-700"
+                  >
+                    <UserIcon className="h-6 w-6 text-white" />
+                    <span className="hidden lg:inline text-white">{session.user.name}</span>
+                  </button>
+                  {isUserMenuOpen && (
+                    <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg py-1">
+                      <div className="px-4 py-2 text-sm text-gray-700 dark:text-gray-200 border-b border-gray-200 dark:border-gray-700">
+                        <p className="font-semibold">{session.user.name}</p>
+                        <p className="text-xs flex items-center">
+                          <ShieldCheckIcon className="h-4 w-4 mr-1" />
+                          {userRole.charAt(0).toUpperCase() + userRole.slice(1)}
+                        </p>
+                      </div>
+                      <Link href="/profile" className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
+                        Profile
+                      </Link>
+                      {userRole === 'admin' && (
+                        <Link href="/admin" className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
+                          Admin Dashboard
+                        </Link>
+                      )}
+                      <button
+                        onClick={handleSignOut}
+                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                      >
+                        Sign out
+                      </button>
+                    </div>
+                  )}
+                </div>
               ) : (
-                <Link href="/login" className="p-2 text-blue-600 dark:text-blue-400 hover:underline">
+                <button onClick={handleSignIn} className="p-2 text-white hover:text-blue-200">
                   Log In
-                </Link>
+                </button>
               )}
               <button 
-                className="lg:hidden p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700"
+                className="lg:hidden p-2 rounded-full hover:bg-blue-700 dark:hover:bg-gray-700"
                 onClick={toggleMobileMenu}
                 aria-label="Toggle menu"
               >
                 {isMobileMenuOpen ? (
-                  <XMarkIcon className="h-6 w-6" />
+                  <XMarkIcon className="h-6 w-6 text-white" />
                 ) : (
-                  <Bars3Icon className="h-6 w-6" />
+                  <Bars3Icon className="h-6 w-6 text-white" />
                 )}
               </button>
             </div>
@@ -126,8 +171,8 @@ const Layout: React.FC<LayoutProps> = ({
                     href={item.href}
                     className={`block py-2 ${
                       isActive(item.href)
-                        ? 'text-blue-600 dark:text-blue-400'
-                        : 'text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400'
+                        ? 'text-white font-semibold'
+                        : 'text-blue-100 hover:text-white'
                     } transition duration-300`}
                   >
                     {item.label}
@@ -137,11 +182,37 @@ const Layout: React.FC<LayoutProps> = ({
               <li>
                 <Link
                   href="/booking"
-                  className="inline-block mt-2 px-6 py-2 bg-blue-600 text-white dark:bg-blue-500 dark:text-gray-100 rounded-full hover:bg-blue-700 dark:hover:bg-blue-600 transition duration-300"
+                  className="inline-block mt-2 px-6 py-2 bg-white text-blue-600 rounded-full hover:bg-blue-100 transition duration-300"
                 >
                   Book Now
                 </Link>
               </li>
+              {session && (
+                <>
+                  <li className="text-sm text-blue-200">
+                    <span className="flex items-center">
+                      <ShieldCheckIcon className="h-4 w-4 mr-1" />
+                      Role: {userRole.charAt(0).toUpperCase() + userRole.slice(1)}
+                    </span>
+                  </li>
+                  {userRole === 'admin' && (
+                    <li>
+                      <Link href="/admin" className="block py-2 text-blue-100 hover:text-white transition duration-300">
+                        Admin Dashboard
+                      </Link>
+                    </li>
+                  )}
+                  <li>
+                    <button
+                      onClick={handleSignOut}
+                      className="flex items-center space-x-2 text-blue-100 hover:text-white"
+                    >
+                      <ArrowRightOnRectangleIcon className="h-5 w-5" />
+                      <span>Sign out</span>
+                    </button>
+                  </li>
+                </>
+              )}
             </ul>
           </div>
         </nav>

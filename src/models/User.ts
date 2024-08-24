@@ -2,6 +2,15 @@
 import mongoose from 'mongoose'
 import bcrypt from 'bcryptjs'
 
+export interface IUser extends mongoose.Document {
+  name: string;
+  email: string;
+  password: string;
+  role: 'admin' | 'customer';
+  createdAt: Date;
+  comparePassword(candidatePassword: string): Promise<boolean>;
+}
+
 const userSchema = new mongoose.Schema({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
@@ -19,15 +28,6 @@ userSchema.pre('save', async function (next) {
 
 userSchema.methods.comparePassword = async function (candidatePassword: string) {
   return bcrypt.compare(candidatePassword, this.password)
-}
-
-export interface IUser extends mongoose.Document {
-  name: string;
-  email: string;
-  password: string;
-  role: 'admin' | 'customer';
-  createdAt: Date;
-  comparePassword(candidatePassword: string): Promise<boolean>;
 }
 
 export default mongoose.models.User || mongoose.model<IUser>('User', userSchema)
