@@ -1,3 +1,4 @@
+// File: pages/api/vehicles/[id].ts:
 import type { NextApiRequest, NextApiResponse } from 'next'
 import dbConnect from '@/lib/db'
 import Vehicle, { IVehicle } from '@/models/Vehicle'

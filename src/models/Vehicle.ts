@@ -1,3 +1,4 @@
+// File: src/models/Vehicle.ts
 import mongoose, { Document, Model, Schema } from 'mongoose';
 
 // Separate interface for vehicle properties

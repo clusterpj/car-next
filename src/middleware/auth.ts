@@ -1,3 +1,4 @@
+// File: src/middleware/auth.ts
 import { NextApiRequest, NextApiResponse } from 'next'
 import { getToken } from 'next-auth/jwt'
 

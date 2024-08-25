@@ -76,3 +76,4 @@
 2024-08-25 19:29:20:2920 [32minfo[39m: [vehicles-api] [32mNew vehicle created: 66cbbe50d437386b49978e59[39m
 2024-08-25 19:29:20:2920 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles[39m
 2024-08-25 19:29:26:2926 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for PUT /api/vehicles/66cbbe50d437386b49978e59[39m
+2024-08-25 19:38:57:3857 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles[39m
