@@ -1,14 +1,20 @@
-// File: src/components/admin/VehicleForm.tsx
-import React from 'react';
-import { useForm } from 'react-hook-form';
+import React, { useState } from 'react';
+import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Select } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { IVehicle, IVehicleProps } from '@/models/Vehicle';
 import { createVehicle, updateVehicle } from '@/lib/api';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { toast } from '@/components/ui/use-toast';
 
 const schema = yup.object({
   make: yup.string().required('Make is required'),
@@ -33,7 +39,8 @@ interface VehicleFormProps {
 }
 
 const VehicleForm: React.FC<VehicleFormProps> = ({ vehicle, onSubmit }) => {
-  const { register, handleSubmit, formState: { errors } } = useForm<VehicleFormData>({
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { register, handleSubmit, control, formState: { errors } } = useForm<VehicleFormData>({
     resolver: yupResolver(schema),
     defaultValues: vehicle ? {
       ...vehicle,
@@ -44,16 +51,31 @@ const VehicleForm: React.FC<VehicleFormProps> = ({ vehicle, onSubmit }) => {
   });
 
   const onSubmitForm = async (data: VehicleFormData) => {
+    setIsSubmitting(true);
     try {
       if (vehicle) {
         await updateVehicle(vehicle._id.toString(), data as IVehicleProps);
+        toast({
+          title: "Vehicle Updated",
+          description: "The vehicle has been successfully updated.",
+        });
       } else {
         await createVehicle(data as IVehicleProps);
+        toast({
+          title: "Vehicle Created",
+          description: "A new vehicle has been successfully created.",
+        });
       }
       onSubmit();
     } catch (error) {
       console.error('Failed to save vehicle', error);
-      // Handle error (e.g., show error message to user)
+      toast({
+        title: "Error",
+        description: "Failed to save the vehicle. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -80,30 +102,60 @@ const VehicleForm: React.FC<VehicleFormProps> = ({ vehicle, onSubmit }) => {
       <Input {...register('mileage')} type="number" placeholder="Mileage" />
       {errors.mileage && <p className="text-red-500">{errors.mileage.message}</p>}
 
-      <Select {...register('fuelType')}>
-        <option value="">Select Fuel Type</option>
-        <option value="gasoline">Gasoline</option>
-        <option value="diesel">Diesel</option>
-        <option value="electric">Electric</option>
-        <option value="hybrid">Hybrid</option>
-      </Select>
+      <Controller
+        name="fuelType"
+        control={control}
+        render={({ field }) => (
+          <Select onValueChange={field.onChange} defaultValue={field.value}>
+            <SelectTrigger>
+              <SelectValue placeholder="Select Fuel Type" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="gasoline">Gasoline</SelectItem>
+              <SelectItem value="diesel">Diesel</SelectItem>
+              <SelectItem value="electric">Electric</SelectItem>
+              <SelectItem value="hybrid">Hybrid</SelectItem>
+            </SelectContent>
+          </Select>
+        )}
+      />
       {errors.fuelType && <p className="text-red-500">{errors.fuelType.message}</p>}
 
-      <Select {...register('transmission')}>
-        <option value="">Select Transmission</option>
-        <option value="automatic">Automatic</option>
-        <option value="manual">Manual</option>
-      </Select>
+      <Controller
+        name="transmission"
+        control={control}
+        render={({ field }) => (
+          <Select onValueChange={field.onChange} defaultValue={field.value}>
+            <SelectTrigger>
+              <SelectValue placeholder="Select Transmission" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="automatic">Automatic</SelectItem>
+              <SelectItem value="manual">Manual</SelectItem>
+            </SelectContent>
+          </Select>
+        )}
+      />
       {errors.transmission && <p className="text-red-500">{errors.transmission.message}</p>}
 
-      <Select {...register('category')}>
-        <option value="">Select Category</option>
-        <option value="economy">Economy</option>
-        <option value="midsize">Midsize</option>
-        <option value="luxury">Luxury</option>
-        <option value="suv">SUV</option>
-        <option value="van">Van</option>
-      </Select>
+      <Controller
+        name="category"
+        control={control}
+        render={({ field }) => (
+          <Select onValueChange={field.onChange} defaultValue={field.value}>
+            <SelectTrigger>
+              <SelectValue placeholder="Select Category" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="economy">Economy</SelectItem>
+              <SelectItem value="midsize">Midsize</SelectItem>
+              <SelectItem value="luxury">Luxury</SelectItem>
+              <SelectItem value="suv">SUV</SelectItem>
+              <SelectItem value="van">Van</SelectItem>
+            </SelectContent>
+          </Select>
+        )}
+      />
       {errors.category && <p className="text-red-500">{errors.category.message}</p>}
 
       <Input {...register('dailyRate')} type="number" step="0.01" placeholder="Daily Rate" />
@@ -114,7 +166,9 @@ const VehicleForm: React.FC<VehicleFormProps> = ({ vehicle, onSubmit }) => {
         <label htmlFor="isAvailable">Is Available</label>
       </div>
 
-      <Button type="submit">{vehicle ? 'Update Vehicle' : 'Create Vehicle'}</Button>
+      <Button type="submit" disabled={isSubmitting}>
+        {isSubmitting ? 'Saving...' : (vehicle ? 'Update Vehicle' : 'Create Vehicle')}
+      </Button>
     </form>
   );
 };

@@ -1,17 +1,17 @@
-import { NextApiRequest, NextApiResponse } from 'next'
-import clientPromise from '../../lib/mongodb'
+import type { NextApiRequest, NextApiResponse } from 'next';
+import dbConnect from '@/lib/db';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
-    const client = await clientPromise
-    const db = client.db("car_rental_db")
+    await dbConnect();
+    res.status(200).json({ message: 'Database connected successfully' });
+  } catch (error: unknown) {
+    console.error('Database connection error:', error);
     
-    const collection = db.collection("test")
-    const result = await collection.insertOne({ test: "Hello, MongoDB!" })
-    
-    res.status(200).json({ message: "Connected successfully to MongoDB", result })
-  } catch (e) {
-    console.error(e)
-    res.status(500).json({ error: 'Unable to connect to MongoDB' })
+    if (error instanceof Error) {
+      res.status(500).json({ message: 'Failed to connect to database', error: error.message });
+    } else {
+      res.status(500).json({ message: 'Failed to connect to database', error: 'An unknown error occurred' });
+    }
   }
 }
