@@ -53,6 +53,7 @@
     "embla-carousel-react": "^8.2.0",
     "express-rate-limit": "^7.4.0",
     "input-otp": "^1.2.4",
+    "lodash": "^4.17.21",
     "lucide-react": "^0.435.0",
     "mongodb": "^6.8.0",
     "mongoose": "^8.5.4",
