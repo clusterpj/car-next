@@ -4,10 +4,9 @@ import { getSession } from 'next-auth/react';
 
 const api = axios.create({
   baseURL: '/api',
-  withCredentials: true, // This is important for including cookies in the request
+  withCredentials: true,
 });
 
-// Update the interceptor to use the correct session properties
 api.interceptors.request.use(async (config) => {
   const session = await getSession();
   if (session?.user) {
@@ -30,9 +29,7 @@ export const fetchVehicles = async (): Promise<{ vehicles: IVehicle[] }> => {
 
 export const createVehicle = async (vehicleData: Partial<IVehicle>): Promise<IVehicle> => {
   try {
-    console.log('Creating vehicle with data:', vehicleData);
     const response = await api.post<IVehicle>('/vehicles', vehicleData);
-    console.log('Create vehicle response:', response.data);
     return response.data;
   } catch (error) {
     console.error('Error creating vehicle:', (error as AxiosError).response?.data || (error as Error).message);

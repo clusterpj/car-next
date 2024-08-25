@@ -62,3 +62,17 @@
 2024-08-25 19:20:32:2032 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles[39m
 2024-08-25 19:20:32:2032 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles[39m
 2024-08-25 19:21:34:2134 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles[39m
+2024-08-25 19:24:19:2419 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles[39m
+2024-08-25 19:25:34:2534 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles[39m
+2024-08-25 19:25:34:2534 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles[39m
+2024-08-25 19:26:52:2652 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles[39m
+2024-08-25 19:26:52:2652 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles[39m
+2024-08-25 19:28:12:2812 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles[39m
+2024-08-25 19:28:16:2816 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for DELETE /api/vehicles/66cbbae6ea9dbd117ed8cb1c[39m
+2024-08-25 19:28:16:2816 [32minfo[39m: [vehicles-api] [32mVehicle deleted: 66cbbae6ea9dbd117ed8cb1c[39m
+2024-08-25 19:29:02:292 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for POST /api/vehicles[39m
+2024-08-25 19:29:02:292 [31merror[39m: [vehicles-api] [31mAPI Error: Validation failed: Invalid VIN format[39m
+2024-08-25 19:29:20:2920 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for POST /api/vehicles[39m
+2024-08-25 19:29:20:2920 [32minfo[39m: [vehicles-api] [32mNew vehicle created: 66cbbe50d437386b49978e59[39m
+2024-08-25 19:29:20:2920 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles[39m
+2024-08-25 19:29:26:2926 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for PUT /api/vehicles/66cbbe50d437386b49978e59[39m

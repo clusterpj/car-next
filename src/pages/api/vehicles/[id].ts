@@ -8,6 +8,7 @@ import { createLogger } from '@/utils/logger'
 import { corsMiddleware } from '@/middleware/cors'
 import { sanitizeInput } from '@/utils/sanitizer';
 import { MongoError } from 'mongodb'
+import { UpdateQuery } from 'mongoose';
 
 const logger = createLogger('vehicles-api')
 
@@ -56,19 +57,26 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse, id: string) 
 }
 
 async function handlePut(req: NextApiRequest, res: NextApiResponse, id: string) {
-  const sanitizedBody = sanitizeInput(req.body);
-  const updatedVehicle = await Vehicle.findByIdAndUpdate(id, sanitizedBody, {
+  const sanitizedBody = sanitizeInput(req.body) as Partial<IVehicle>;
+  
+  if (!sanitizedBody || Object.keys(sanitizedBody).length === 0) {
+    return res.status(400).json({ message: 'No valid fields to update' });
+  }
+
+  const updateQuery: UpdateQuery<IVehicle> = { $set: sanitizedBody };
+
+  const updatedVehicle = await Vehicle.findByIdAndUpdate(id, updateQuery, {
     new: true,
     runValidators: true
   });
 
   if (!updatedVehicle) {
-    return res.status(404).json({ success: false, message: 'Vehicle not found' });
+    return res.status(404).json({ message: 'Vehicle not found' });
   }
 
-  logger.info(`Vehicle updated: ${id}`);
   return res.status(200).json(updatedVehicle);
 }
+
 
 async function handleDelete(req: NextApiRequest, res: NextApiResponse, id: string) {
   const deletedVehicle = await Vehicle.findByIdAndDelete(id);

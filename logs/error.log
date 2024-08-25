@@ -12,3 +12,4 @@
 2024-08-25 17:03:11:311 [31merror[39m: [vehicles-api] [31mAPI Error: connect ECONNREFUSED 127.0.0.1:27017[39m
 2024-08-25 19:13:40:1340 [31merror[39m: [vehicles-api] [31mAPI Error: Validation failed: Invalid VIN format[39m
 2024-08-25 19:14:27:1427 [31merror[39m: [vehicles-api] [31mAPI Error: Validation failed: Invalid VIN format[39m
+2024-08-25 19:29:02:292 [31merror[39m: [vehicles-api] [31mAPI Error: Validation failed: Invalid VIN format[39m
