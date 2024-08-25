@@ -28,7 +28,7 @@ const schema = yup.object({
   transmission: yup.string().required('Transmission is required').oneOf(['automatic', 'manual']),
   category: yup.string().required('Category is required').oneOf(['economy', 'midsize', 'luxury', 'suv', 'van']),
   dailyRate: yup.number().required('Daily rate is required').min(0),
-  isAvailable: yup.boolean(),
+  isAvailable: yup.boolean().required('Availability is required'),
 });
 
 type VehicleFormData = yup.InferType<typeof schema>;
@@ -47,37 +47,44 @@ const VehicleForm: React.FC<VehicleFormProps> = ({ vehicle, onSubmit }) => {
       fuelType: vehicle.fuelType,
       transmission: vehicle.transmission,
       category: vehicle.category,
-    } : {},
+      isAvailable: vehicle.isAvailable
+    } : {
+      isAvailable: false
+    },
   });
 
   const onSubmitForm = async (data: VehicleFormData) => {
+    console.log('Form submitted with data:', data);
     setIsSubmitting(true);
     try {
+      let result: IVehicle;
       if (vehicle) {
-        await updateVehicle(vehicle._id.toString(), data as IVehicleProps);
-        toast({
-          title: "Vehicle Updated",
-          description: "The vehicle has been successfully updated.",
-        });
+        console.log('Updating existing vehicle');
+        result = await updateVehicle(vehicle._id.toString(), data as IVehicleProps);
       } else {
-        await createVehicle(data as IVehicleProps);
-        toast({
-          title: "Vehicle Created",
-          description: "A new vehicle has been successfully created.",
-        });
+        console.log('Creating new vehicle');
+        result = await createVehicle(data as IVehicleProps);
       }
+      console.log('API response:', result);
+      
+      toast({
+        title: vehicle ? "Vehicle Updated" : "Vehicle Created",
+        description: vehicle ? "The vehicle has been successfully updated." : "A new vehicle has been successfully created.",
+      });
       onSubmit();
     } catch (error) {
       console.error('Failed to save vehicle', error);
       toast({
         title: "Error",
-        description: "Failed to save the vehicle. Please try again.",
+        description: `Failed to ${vehicle ? 'update' : 'create'} the vehicle. ${(error as Error).message}`,
         variant: "destructive",
       });
     } finally {
       setIsSubmitting(false);
     }
   };
+
+  console.log('Current form errors:', errors);
 
   return (
     <form onSubmit={handleSubmit(onSubmitForm)} className="space-y-4">
@@ -162,11 +169,26 @@ const VehicleForm: React.FC<VehicleFormProps> = ({ vehicle, onSubmit }) => {
       {errors.dailyRate && <p className="text-red-500">{errors.dailyRate.message}</p>}
 
       <div className="flex items-center space-x-2">
-        <Checkbox {...register('isAvailable')} id="isAvailable" />
+        <Controller
+          name="isAvailable"
+          control={control}
+          render={({ field }) => (
+            <Checkbox
+              id="isAvailable"
+              checked={field.value}
+              onCheckedChange={field.onChange}
+            />
+          )}
+        />
         <label htmlFor="isAvailable">Is Available</label>
       </div>
+      {errors.isAvailable && <p className="text-red-500">{errors.isAvailable.message}</p>}
 
-      <Button type="submit" disabled={isSubmitting}>
+      <Button 
+        type="submit" 
+        disabled={isSubmitting}
+        onClick={() => console.log('Submit button clicked')}
+      >
         {isSubmitting ? 'Saving...' : (vehicle ? 'Update Vehicle' : 'Create Vehicle')}
       </Button>
     </form>

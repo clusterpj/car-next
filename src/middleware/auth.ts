@@ -1,16 +1,17 @@
-// File: src/middleware/auth.ts
 import { NextApiRequest, NextApiResponse } from 'next'
-import { getSession } from 'next-auth/react'
+import { getToken } from 'next-auth/jwt'
 
 export function withAuth(handler: Function) {
   return async (req: NextApiRequest, res: NextApiResponse) => {
-    const session = await getSession({ req })
+    const token = await getToken({ req })
 
-    if (!session) {
-      return res.status(401).json({ message: "Unauthorized" })
+    if (!token) {
+      return res.status(401).json({ success: false, message: "Unauthorized" })
     }
 
-    // TODO: Implement role-based access control if needed
+    if (token.role !== 'admin') {
+      return res.status(403).json({ success: false, message: "Forbidden: Admin access required" })
+    }
 
     return handler(req, res)
   }

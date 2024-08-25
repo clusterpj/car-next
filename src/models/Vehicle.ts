@@ -3,7 +3,7 @@ import mongoose, { Document, Model, Schema } from 'mongoose';
 // Separate interface for vehicle properties
 export interface IVehicleProps {
   make: string;
-  modelName: string;  // Changed from 'model' to 'modelName' to avoid conflict
+  modelName: string;
   year: number;
   licensePlate: string;
   vin: string;
@@ -39,7 +39,7 @@ interface IVehicleModel extends Model<IVehicle> {
 
 const vehicleSchema = new Schema<IVehicle>({
   make: { type: String, required: true, trim: true },
-  modelName: { type: String, required: true, trim: true },  // Changed from 'model' to 'modelName'
+  modelName: { type: String, required: true, trim: true },
   year: { 
     type: Number, 
     required: true,
@@ -56,7 +56,7 @@ const vehicleSchema = new Schema<IVehicle>({
       validator: function(v: string) {
         return /^[A-Z0-9]{5,8}$/.test(v);
       },
-      message: props => `${props.value} is not a valid license plate number!`
+      message: (props: any) => `${props.value} is not a valid license plate number!`
     }
   },
   vin: { 
@@ -69,7 +69,7 @@ const vehicleSchema = new Schema<IVehicle>({
       validator: function(v: string) {
         return /^[A-HJ-NPR-Z0-9]{17}$/.test(v);
       },
-      message: props => `${props.value} is not a valid VIN!`
+      message: (props: any) => `${props.value} is not a valid VIN!`
     }
   },
   color: { type: String, required: true, trim: true },
@@ -110,8 +110,6 @@ const vehicleSchema = new Schema<IVehicle>({
   toObject: { virtuals: true }
 });
 
-// Rest of the schema definition remains the same...
-
 vehicleSchema.index({ make: 1, modelName: 1 });
 vehicleSchema.index({ category: 1, isAvailable: 1 });
 vehicleSchema.index({ dailyRate: 1 });
@@ -136,6 +134,7 @@ vehicleSchema.pre('save', function(next) {
   next();
 });
 
-const Vehicle = mongoose.model<IVehicle, IVehicleModel>('Vehicle', vehicleSchema);
+// Check if the model already exists before compiling it
+const Vehicle: IVehicleModel = mongoose.models.Vehicle as IVehicleModel || mongoose.model<IVehicle, IVehicleModel>('Vehicle', vehicleSchema);
 
 export default Vehicle;

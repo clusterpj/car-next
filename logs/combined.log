@@ -28,3 +28,37 @@
 2024-08-25 18:01:48:148 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles[39m
 2024-08-25 18:01:48:148 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles[39m
 2024-08-25 18:04:29:429 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles[39m
+2024-08-25 18:13:04:134 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles[39m
+2024-08-25 18:13:04:134 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles[39m
+2024-08-25 18:16:08:168 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles[39m
+2024-08-25 18:20:56:2056 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles[39m
+2024-08-25 18:20:56:2056 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles[39m
+2024-08-25 18:21:29:2129 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for POST /api/vehicles[39m
+2024-08-25 18:22:50:2250 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles[39m
+2024-08-25 18:25:36:2536 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles[39m
+2024-08-25 18:25:36:2536 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles[39m
+2024-08-25 18:46:32:4632 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles[39m
+2024-08-25 18:46:32:4632 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles[39m
+2024-08-25 18:47:00:470 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for POST /api/vehicles[39m
+2024-08-25 18:55:38:5538 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles[39m
+2024-08-25 18:55:38:5538 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles[39m
+2024-08-25 19:01:02:12 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles[39m
+2024-08-25 19:01:02:12 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles[39m
+2024-08-25 19:01:42:142 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for POST /api/vehicles[39m
+2024-08-25 19:02:28:228 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles[39m
+2024-08-25 19:02:28:228 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles[39m
+2024-08-25 19:03:00:30 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for POST /api/vehicles[39m
+2024-08-25 19:07:56:756 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles[39m
+2024-08-25 19:12:48:1248 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles[39m
+2024-08-25 19:12:48:1248 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles[39m
+2024-08-25 19:13:40:1340 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for POST /api/vehicles[39m
+2024-08-25 19:13:40:1340 [31merror[39m: [vehicles-api] [31mAPI Error: Validation failed: Invalid VIN format[39m
+2024-08-25 19:14:27:1427 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for POST /api/vehicles[39m
+2024-08-25 19:14:27:1427 [31merror[39m: [vehicles-api] [31mAPI Error: Validation failed: Invalid VIN format[39m
+2024-08-25 19:14:46:1446 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for POST /api/vehicles[39m
+2024-08-25 19:14:46:1446 [32minfo[39m: [vehicles-api] [32mNew vehicle created: 66cbbae6ea9dbd117ed8cb1c[39m
+2024-08-25 19:14:46:1446 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles[39m
+2024-08-25 19:15:54:1554 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles[39m
+2024-08-25 19:20:32:2032 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles[39m
+2024-08-25 19:20:32:2032 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles[39m
+2024-08-25 19:21:34:2134 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles[39m

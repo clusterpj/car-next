@@ -3,6 +3,7 @@ import NextAuth, { DefaultUser, AuthOptions } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import dbConnect from '@/lib/db'
 import User, { IUser } from '@/models/User'
+import { JWT } from 'next-auth/jwt';
 
 // Extend the built-in session types
 declare module "next-auth" {
@@ -14,6 +15,12 @@ declare module "next-auth" {
     user: User & {
       id: string;
     }
+  }
+}
+
+declare module "next-auth/jwt" {
+  interface JWT {
+    role: string;
   }
 }
 
@@ -67,17 +74,18 @@ export const authOptions: AuthOptions = {
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        token.role = user.role
+        token.role = user.role;
+        token.id = user.id;
       }
-      return token
+      return token;
     },
     async session({ session, token }) {
       if (session.user) {
-        session.user.role = token.role
-        session.user.id = token.sub as string
+        session.user.role = token.role as string;
+        session.user.id = token.id as string;
       }
-      return session
-    }
+      return session;
+    },
   },
   pages: {
     signIn: '/login',

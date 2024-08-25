@@ -129,37 +129,29 @@ async function handler(
   req: NextApiRequest,
   res: NextApiResponse<PaginatedVehicleResponse | IVehicle | ErrorResponse | SuccessResponse>
 ) {
-  if (!req.socket) {
-    req.socket = {} as any;
-  }
-  try {
-    await dbConnect();
+  await dbConnect();
 
-    let result;
+  try {
     switch (req.method) {
       case 'GET':
-        result = await handleGet(req);
+        const result = await handleGet(req);
         res.setHeader('Cache-Control', 'public, max-age=60, stale-while-revalidate=30');
-        res.status(200).json(result);
-        break;
+        return res.status(200).json(result);
       case 'POST':
-        result = await handlePost(req);
-        res.status(201).json(result);
-        break;
+        const newVehicle = await handlePost(req);
+        return res.status(201).json(newVehicle);
       case 'PUT':
-        result = await handlePut(req);
-        res.status(200).json(result);
-        break;
+        const updatedVehicle = await handlePut(req);
+        return res.status(200).json(updatedVehicle);
       case 'DELETE':
         await handleDelete(req);
-        res.status(200).json({ success: true, message: 'Vehicle deleted successfully' } as SuccessResponse);
-        break;
+        return res.status(200).json({ success: true, message: 'Vehicle deleted successfully' } as SuccessResponse);
       default:
         res.setHeader('Allow', ['GET', 'POST', 'PUT', 'DELETE']);
-        throw new ApiError(405, `Method ${req.method} Not Allowed`);
+        return res.status(405).json({ success: false, message: `Method ${req.method} Not Allowed` });
     }
   } catch (error) {
-    handleError(error, res);
+    return handleError(error, res);
   }
 }
 
@@ -226,11 +218,6 @@ async function handleGet(req: NextApiRequest): Promise<PaginatedVehicleResponse>
 }
 
 async function handlePost(req: NextApiRequest): Promise<IVehicle> {
-  const session = await getSession({ req });
-  if (!session?.user?.role || session.user.role !== 'admin') {
-    throw new ApiError(403, 'Unauthorized: Admin access required');
-  }
-
   const sanitizedBody = sanitizeInput(req.body) as Record<string, unknown>;
 
   const vehicleData: Partial<IVehicleProps> = {
@@ -299,77 +286,28 @@ async function handlePost(req: NextApiRequest): Promise<IVehicle> {
 }
 
 async function handlePut(req: NextApiRequest): Promise<IVehicle> {
-  const session = await getSession({ req });
-  if (!session?.user?.role || session.user.role !== 'admin') {
-    throw new ApiError(403, 'Unauthorized: Admin access required');
-  }
-
-  const { id } = sanitizeInput(req.query) as Record<string, unknown>;
+  const { id } = req.query;
   if (!id || typeof id !== 'string') {
     throw new ApiError(400, 'Vehicle ID is required');
   }
 
   const sanitizedBody = sanitizeInput(req.body) as Record<string, unknown>;
 
-  const updateData: Partial<IVehicleProps> = {};
-
-  // Only include fields that are present in the request body
-  if (sanitizedBody.make) updateData.make = sanitizedBody.make as string;
-  if (sanitizedBody.modelName) updateData.modelName = sanitizedBody.modelName as string;
-  if (sanitizedBody.year) updateData.year = Number(sanitizedBody.year);
-  if (sanitizedBody.licensePlate) updateData.licensePlate = sanitizedBody.licensePlate as string;
-  if (sanitizedBody.vin) updateData.vin = sanitizedBody.vin as string;
-  if (sanitizedBody.color) updateData.color = sanitizedBody.color as string;
-  if (sanitizedBody.mileage) updateData.mileage = Number(sanitizedBody.mileage);
-  if (sanitizedBody.fuelType) updateData.fuelType = sanitizedBody.fuelType as 'gasoline' | 'diesel' | 'electric' | 'hybrid';
-  if (sanitizedBody.transmission) updateData.transmission = sanitizedBody.transmission as 'automatic' | 'manual';
-  if (sanitizedBody.category) updateData.category = sanitizedBody.category as 'economy' | 'midsize' | 'luxury' | 'suv' | 'van';
-  if (sanitizedBody.dailyRate) updateData.dailyRate = Number(sanitizedBody.dailyRate);
-  if (sanitizedBody.isAvailable !== undefined) updateData.isAvailable = Boolean(sanitizedBody.isAvailable);
-  
-  if (Array.isArray(sanitizedBody.features)) {
-    updateData.features = sanitizedBody.features.map(feature => sanitizeInput(feature) as string);
-  }
-  
-  if (Array.isArray(sanitizedBody.maintenanceHistory)) {
-  updateData.maintenanceHistory = sanitizedBody.maintenanceHistory.map(record => {
-    const sanitizedDate = sanitizeInput(record.date);
-    let date: Date;
-
-    if (sanitizedDate instanceof Date) {
-      date = sanitizedDate;
-    } else if (typeof sanitizedDate === 'string' || typeof sanitizedDate === 'number') {
-      const parsedDate = new Date(sanitizedDate);
-      date = isNaN(parsedDate.getTime()) ? new Date() : parsedDate;
-    } else {
-      date = new Date(); // Fallback to current date if invalid
-    }
-
-    const description = sanitizeInput(record.description);
-    const cost = sanitizeInput(record.cost);
-
-    return {
-      date,
-      description: typeof description === 'string' ? description : '',
-      cost: typeof cost === 'number' ? Number(cost) : 0,
-    };
-  });
-}
-
-  
-  if (Array.isArray(sanitizedBody.images)) {
-    updateData.images = sanitizedBody.images.map(image => sanitizeInput(image) as string);
-  }
-
-  if (sanitizedBody.lastServiced) {
-    const lastServiced = sanitizeInput(sanitizedBody.lastServiced);
-    if (typeof lastServiced === 'string' && !isNaN(Date.parse(lastServiced))) {
-      updateData.lastServiced = new Date(lastServiced);
-      updateData.nextServiceDue = calculateNextServiceDue(updateData.lastServiced);
-    } else {
-      throw new ApiError(400, 'Invalid lastServiced date');
-    }
-  }
+  const updateData: Partial<IVehicleProps> = {
+    make: sanitizedBody.make as string,
+    modelName: sanitizedBody.modelName as string,
+    year: Number(sanitizedBody.year),
+    licensePlate: sanitizedBody.licensePlate as string,
+    vin: sanitizedBody.vin as string,
+    color: sanitizedBody.color as string,
+    mileage: Number(sanitizedBody.mileage),
+    fuelType: sanitizedBody.fuelType as 'gasoline' | 'diesel' | 'electric' | 'hybrid',
+    transmission: sanitizedBody.transmission as 'automatic' | 'manual',
+    category: sanitizedBody.category as 'economy' | 'midsize' | 'luxury' | 'suv' | 'van',
+    dailyRate: Number(sanitizedBody.dailyRate),
+    isAvailable: Boolean(sanitizedBody.isAvailable),
+    // ... (add other fields as needed)
+  };
 
   const { isValid, errors } = await validateVehicleData(updateData, true);
   if (!isValid) {
@@ -392,12 +330,7 @@ async function handlePut(req: NextApiRequest): Promise<IVehicle> {
 
 
 async function handleDelete(req: NextApiRequest): Promise<{ success: true; message: string }> {
-  const session = await getSession({ req });
-  if (!session?.user?.role || session.user.role !== 'admin') {
-    throw new ApiError(403, 'Unauthorized: Admin access required');
-  }
-
-  const { id } = sanitizeInput(req.query) as Record<string, unknown>;
+  const { id } = req.query;
   if (!id || typeof id !== 'string') {
     throw new ApiError(400, 'Vehicle ID is required');
   }
