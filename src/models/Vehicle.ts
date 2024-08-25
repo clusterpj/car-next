@@ -29,6 +29,7 @@ export interface IVehicleProps {
 export interface IVehicle extends IVehicleProps, Document {
   needsService(): boolean;
   age: number;
+  _id: mongoose.Types.ObjectId;
 }
 
 // Define a type for the static methods

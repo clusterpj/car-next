@@ -1,2 +1,22 @@
 2024-08-24 13:42:31:4231 [32minfo[39m: [register-api] [32mNew user registered: jisgore@gmail.com[39m
 2024-08-24 18:32:52:3252 [32minfo[39m: [register-api] [32mNew user registered: pjimenes@outlook.com[39m
+2024-08-25 16:55:14:5514 [31merror[39m: [vehicles-api] [31mAPI Error: connect ECONNREFUSED 127.0.0.1:27017[39m
+2024-08-25 16:55:14:5514 [31merror[39m: [vehicles-api] [31mAPI Error: connect ECONNREFUSED 127.0.0.1:27017[39m
+2024-08-25 16:55:14:5514 [31merror[39m: [vehicles-api] [31mAPI Error: connect ECONNREFUSED 127.0.0.1:27017[39m
+2024-08-25 16:55:14:5514 [31merror[39m: [vehicles-api] [31mAPI Error: connect ECONNREFUSED 127.0.0.1:27017[39m
+2024-08-25 16:56:04:564 [31merror[39m: [vehicles-api] [31mAPI Error: connect ECONNREFUSED 127.0.0.1:27017[39m
+2024-08-25 16:56:04:564 [31merror[39m: [vehicles-api] [31mAPI Error: connect ECONNREFUSED 127.0.0.1:27017[39m
+2024-08-25 16:57:51:5751 [31merror[39m: [vehicles-api] [31mAPI Error: connect ECONNREFUSED 127.0.0.1:27017[39m
+2024-08-25 17:03:11:311 [31merror[39m: [vehicles-api] [31mAPI Error: connect ECONNREFUSED 127.0.0.1:27017[39m
+2024-08-25 17:03:11:311 [31merror[39m: [vehicles-api] [31mAPI Error: connect ECONNREFUSED 127.0.0.1:27017[39m
+2024-08-25 17:03:11:311 [31merror[39m: [vehicles-api] [31mAPI Error: connect ECONNREFUSED 127.0.0.1:27017[39m
+2024-08-25 17:03:11:311 [31merror[39m: [vehicles-api] [31mAPI Error: connect ECONNREFUSED 127.0.0.1:27017[39m
+2024-08-25 17:03:11:311 [31merror[39m: [vehicles-api] [31mAPI Error: connect ECONNREFUSED 127.0.0.1:27017[39m
+2024-08-25 17:23:37:2337 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles[39m
+2024-08-25 17:23:37:2337 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles[39m
+2024-08-25 17:36:23:3623 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles[39m
+2024-08-25 17:36:23:3623 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles[39m
+2024-08-25 17:37:10:3710 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles[39m
+2024-08-25 17:37:10:3710 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles[39m
+2024-08-25 17:46:48:4648 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles[39m
+2024-08-25 17:46:48:4648 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles[39m

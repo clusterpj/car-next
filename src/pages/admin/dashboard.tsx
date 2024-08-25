@@ -167,7 +167,7 @@ const AdminDashboard: React.FC = () => {
       </Tabs>
 
       <div className="mt-8 flex space-x-4">
-        <Button>Manage Vehicles</Button>
+        <Button onClick={() => router.push('/admin/cars')}>Manage Vehicles</Button>
         <Button>View All Rentals</Button>
         <Button>Generate Report</Button>
       </div>
