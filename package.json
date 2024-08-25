@@ -81,6 +81,7 @@
     "@types/express-rate-limit": "^6.0.0",
     "@types/graceful-fs": "^4.1.9",
     "@types/jest": "^29.5.12",
+    "@types/lodash": "^4.17.7",
     "@types/mongoose": "^5.11.97",
     "@types/node": "^20.16.1",
     "@types/react": "^18.2.64",

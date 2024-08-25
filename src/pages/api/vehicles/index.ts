@@ -9,9 +9,19 @@ import { withRateLimit } from '@/middleware/rateLimit'
 import { validateRequest } from '@/middleware/validateRequest'
 import { createLogger } from '@/utils/logger'
 import { corsMiddleware } from '@/middleware/cors'
-import { sanitizeInput, sanitizeForRegex } from '@/utils/sanitizer'
+import { sanitizeInput, sanitizeForRegex } from '@/utils/sanitizer';
 import { MongoError } from 'mongodb'
 import * as Yup from 'yup';
+
+/**
+ * Vehicle API Route Handler
+ * 
+ * This file handles GET, POST, PUT, and DELETE requests for the /api/vehicles endpoint.
+ * GET: Retrieves a list of vehicles, with advanced filtering, sorting, and pagination.
+ * POST: Creates a new vehicle (restricted to admin users).
+ * PUT: Updates an existing vehicle (restricted to admin users).
+ * DELETE: Removes a vehicle from the database (restricted to admin users).
+ */
 
 // Define the Yup schema for vehicle data
 const vehicleSchema = Yup.object().shape({
