@@ -3,7 +3,10 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import dbConnect from '@/lib/db'
 import Rental from '@/models/Rental'
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
   await dbConnect()
 
   switch (req.method) {

@@ -10,7 +10,9 @@ export function validateRequest(handler: NextApiHandler) {
       const { make, modelName, year, licensePlate, dailyRate } = req.body
       if (!make || !modelName || !year || !licensePlate || !dailyRate) {
         logger.warn(`Invalid request body: ${JSON.stringify(req.body)}`)
-        return res.status(400).json({ success: false, message: 'Missing required fields' })
+        return res
+          .status(400)
+          .json({ success: false, message: 'Missing required fields' })
       }
     }
 

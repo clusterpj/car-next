@@ -1,90 +1,115 @@
-import React, { useState } from 'react';
-import { useForm, Controller } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import * as yup from 'yup';
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Checkbox } from "@/components/ui/checkbox";
-import { IVehicle, IVehicleProps } from '@/models/Vehicle';
-import { createVehicle, updateVehicle } from '@/lib/api';
+import React, { useState } from 'react'
+import { useForm, Controller } from 'react-hook-form'
+import { yupResolver } from '@hookform/resolvers/yup'
+import * as yup from 'yup'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Checkbox } from '@/components/ui/checkbox'
+import { IVehicle, IVehicleProps } from '@/models/Vehicle'
+import { createVehicle, updateVehicle } from '@/lib/api'
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { toast } from '@/components/ui/use-toast';
+} from '@/components/ui/select'
+import { toast } from '@/components/ui/use-toast'
 
 const schema = yup.object({
   make: yup.string().required('Make is required'),
   modelName: yup.string().required('Model name is required'),
-  year: yup.number().required('Year is required').min(1900).max(new Date().getFullYear() + 1),
+  year: yup
+    .number()
+    .required('Year is required')
+    .min(1900)
+    .max(new Date().getFullYear() + 1),
   licensePlate: yup.string().required('License plate is required'),
   vin: yup.string().required('VIN is required'),
   color: yup.string().required('Color is required'),
   mileage: yup.number().required('Mileage is required').min(0),
-  fuelType: yup.string().required('Fuel type is required').oneOf(['gasoline', 'diesel', 'electric', 'hybrid']),
-  transmission: yup.string().required('Transmission is required').oneOf(['automatic', 'manual']),
-  category: yup.string().required('Category is required').oneOf(['economy', 'midsize', 'luxury', 'suv', 'van']),
+  fuelType: yup
+    .string()
+    .required('Fuel type is required')
+    .oneOf(['gasoline', 'diesel', 'electric', 'hybrid']),
+  transmission: yup
+    .string()
+    .required('Transmission is required')
+    .oneOf(['automatic', 'manual']),
+  category: yup
+    .string()
+    .required('Category is required')
+    .oneOf(['economy', 'midsize', 'luxury', 'suv', 'van']),
   dailyRate: yup.number().required('Daily rate is required').min(0),
   isAvailable: yup.boolean().required('Availability is required'),
-});
+})
 
-type VehicleFormData = yup.InferType<typeof schema>;
+type VehicleFormData = yup.InferType<typeof schema>
 
 interface VehicleFormProps {
-  vehicle?: IVehicle | null;
-  onSubmit: () => void;
+  vehicle?: IVehicle | null
+  onSubmit: () => void
 }
 
 const VehicleForm: React.FC<VehicleFormProps> = ({ vehicle, onSubmit }) => {
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const { register, handleSubmit, control, formState: { errors } } = useForm<VehicleFormData>({
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const {
+    register,
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm<VehicleFormData>({
     resolver: yupResolver(schema),
-    defaultValues: vehicle ? {
-      ...vehicle,
-      fuelType: vehicle.fuelType,
-      transmission: vehicle.transmission,
-      category: vehicle.category,
-      isAvailable: vehicle.isAvailable
-    } : {
-      isAvailable: false
-    },
-  });
+    defaultValues: vehicle
+      ? {
+          ...vehicle,
+          fuelType: vehicle.fuelType,
+          transmission: vehicle.transmission,
+          category: vehicle.category,
+          isAvailable: vehicle.isAvailable,
+        }
+      : {
+          isAvailable: false,
+        },
+  })
 
   const onSubmitForm = async (data: VehicleFormData) => {
-    console.log('Form submitted with data:', data);
-    setIsSubmitting(true);
+    console.log('Form submitted with data:', data)
+    setIsSubmitting(true)
     try {
-      let result: IVehicle;
+      let result: IVehicle
       if (vehicle) {
-        console.log('Updating existing vehicle');
-        result = await updateVehicle(vehicle._id.toString(), data as IVehicleProps);
+        console.log('Updating existing vehicle')
+        result = await updateVehicle(
+          vehicle._id.toString(),
+          data as IVehicleProps
+        )
       } else {
-        console.log('Creating new vehicle');
-        result = await createVehicle(data as IVehicleProps);
+        console.log('Creating new vehicle')
+        result = await createVehicle(data as IVehicleProps)
       }
-      console.log('API response:', result);
-      
-      toast({
-        title: vehicle ? "Vehicle Updated" : "Vehicle Created",
-        description: vehicle ? "The vehicle has been successfully updated." : "A new vehicle has been successfully created.",
-      });
-      onSubmit();
-    } catch (error) {
-      console.error('Failed to save vehicle', error);
-      toast({
-        title: "Error",
-        description: `Failed to ${vehicle ? 'update' : 'create'} the vehicle. ${(error as Error).message}`,
-        variant: "destructive",
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+      console.log('API response:', result)
 
-  console.log('Current form errors:', errors);
+      toast({
+        title: vehicle ? 'Vehicle Updated' : 'Vehicle Created',
+        description: vehicle
+          ? 'The vehicle has been successfully updated.'
+          : 'A new vehicle has been successfully created.',
+      })
+      onSubmit()
+    } catch (error) {
+      console.error('Failed to save vehicle', error)
+      toast({
+        title: 'Error',
+        description: `Failed to ${vehicle ? 'update' : 'create'} the vehicle. ${(error as Error).message}`,
+        variant: 'destructive',
+      })
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
+  console.log('Current form errors:', errors)
 
   return (
     <form onSubmit={handleSubmit(onSubmitForm)} className="space-y-4">
@@ -92,13 +117,17 @@ const VehicleForm: React.FC<VehicleFormProps> = ({ vehicle, onSubmit }) => {
       {errors.make && <p className="text-red-500">{errors.make.message}</p>}
 
       <Input {...register('modelName')} placeholder="Model" />
-      {errors.modelName && <p className="text-red-500">{errors.modelName.message}</p>}
+      {errors.modelName && (
+        <p className="text-red-500">{errors.modelName.message}</p>
+      )}
 
       <Input {...register('year')} type="number" placeholder="Year" />
       {errors.year && <p className="text-red-500">{errors.year.message}</p>}
 
       <Input {...register('licensePlate')} placeholder="License Plate" />
-      {errors.licensePlate && <p className="text-red-500">{errors.licensePlate.message}</p>}
+      {errors.licensePlate && (
+        <p className="text-red-500">{errors.licensePlate.message}</p>
+      )}
 
       <Input {...register('vin')} placeholder="VIN" />
       {errors.vin && <p className="text-red-500">{errors.vin.message}</p>}
@@ -107,7 +136,9 @@ const VehicleForm: React.FC<VehicleFormProps> = ({ vehicle, onSubmit }) => {
       {errors.color && <p className="text-red-500">{errors.color.message}</p>}
 
       <Input {...register('mileage')} type="number" placeholder="Mileage" />
-      {errors.mileage && <p className="text-red-500">{errors.mileage.message}</p>}
+      {errors.mileage && (
+        <p className="text-red-500">{errors.mileage.message}</p>
+      )}
 
       <Controller
         name="fuelType"
@@ -126,7 +157,9 @@ const VehicleForm: React.FC<VehicleFormProps> = ({ vehicle, onSubmit }) => {
           </Select>
         )}
       />
-      {errors.fuelType && <p className="text-red-500">{errors.fuelType.message}</p>}
+      {errors.fuelType && (
+        <p className="text-red-500">{errors.fuelType.message}</p>
+      )}
 
       <Controller
         name="transmission"
@@ -143,7 +176,9 @@ const VehicleForm: React.FC<VehicleFormProps> = ({ vehicle, onSubmit }) => {
           </Select>
         )}
       />
-      {errors.transmission && <p className="text-red-500">{errors.transmission.message}</p>}
+      {errors.transmission && (
+        <p className="text-red-500">{errors.transmission.message}</p>
+      )}
 
       <Controller
         name="category"
@@ -163,10 +198,19 @@ const VehicleForm: React.FC<VehicleFormProps> = ({ vehicle, onSubmit }) => {
           </Select>
         )}
       />
-      {errors.category && <p className="text-red-500">{errors.category.message}</p>}
+      {errors.category && (
+        <p className="text-red-500">{errors.category.message}</p>
+      )}
 
-      <Input {...register('dailyRate')} type="number" step="0.01" placeholder="Daily Rate" />
-      {errors.dailyRate && <p className="text-red-500">{errors.dailyRate.message}</p>}
+      <Input
+        {...register('dailyRate')}
+        type="number"
+        step="0.01"
+        placeholder="Daily Rate"
+      />
+      {errors.dailyRate && (
+        <p className="text-red-500">{errors.dailyRate.message}</p>
+      )}
 
       <div className="flex items-center space-x-2">
         <Controller
@@ -182,17 +226,23 @@ const VehicleForm: React.FC<VehicleFormProps> = ({ vehicle, onSubmit }) => {
         />
         <label htmlFor="isAvailable">Is Available</label>
       </div>
-      {errors.isAvailable && <p className="text-red-500">{errors.isAvailable.message}</p>}
+      {errors.isAvailable && (
+        <p className="text-red-500">{errors.isAvailable.message}</p>
+      )}
 
-      <Button 
-        type="submit" 
+      <Button
+        type="submit"
         disabled={isSubmitting}
         onClick={() => console.log('Submit button clicked')}
       >
-        {isSubmitting ? 'Saving...' : (vehicle ? 'Update Vehicle' : 'Create Vehicle')}
+        {isSubmitting
+          ? 'Saving...'
+          : vehicle
+            ? 'Update Vehicle'
+            : 'Create Vehicle'}
       </Button>
     </form>
-  );
-};
+  )
+}
 
-export default VehicleForm;
+export default VehicleForm

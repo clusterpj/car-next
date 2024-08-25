@@ -1,10 +1,10 @@
 import { NextApiHandler, NextApiRequest, NextApiResponse } from 'next'
-import Cors from 'cors';
+import Cors from 'cors'
 
 const cors = Cors({
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   origin: process.env.ALLOWED_ORIGIN, // Set this in your .env file
-  optionsSuccessStatus: 200
+  optionsSuccessStatus: 200,
 })
 
 export function corsMiddleware(handler: NextApiHandler) {

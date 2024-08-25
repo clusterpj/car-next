@@ -1,11 +1,17 @@
 // File: src/pages/admin/dashboard.tsx
-import React from 'react';
-import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/router';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { CalendarIcon, CarIcon, CreditCardIcon, UserIcon } from 'lucide-react';
+import React from 'react'
+import { useSession } from 'next-auth/react'
+import { useRouter } from 'next/router'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { CalendarIcon, CarIcon, CreditCardIcon, UserIcon } from 'lucide-react'
 
 // Placeholder data (replace with actual API calls in production)
 const dashboardData = {
@@ -13,31 +19,34 @@ const dashboardData = {
   activeRentals: 42,
   totalRevenue: 98765,
   availableCars: 15,
-};
+}
 
 const AdminDashboard: React.FC = () => {
-  const { data: session, status } = useSession();
-  const router = useRouter();
+  const { data: session, status } = useSession()
+  const router = useRouter()
 
   // Redirect if not authenticated or not an admin
   React.useEffect(() => {
-    if (status === 'unauthenticated' || (session && session.user.role !== 'admin')) {
-      router.push('/');
+    if (
+      status === 'unauthenticated' ||
+      (session && session.user.role !== 'admin')
+    ) {
+      router.push('/')
     }
-  }, [session, status, router]);
+  }, [session, status, router])
 
   if (status === 'loading') {
-    return <div>Loading...</div>;
+    return <div>Loading...</div>
   }
 
   if (!session || session.user.role !== 'admin') {
-    return null;
+    return null
   }
 
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-8">Admin Dashboard</h1>
-      
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -45,7 +54,9 @@ const AdminDashboard: React.FC = () => {
             <CarIcon className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{dashboardData.totalRentals}</div>
+            <div className="text-2xl font-bold">
+              {dashboardData.totalRentals}
+            </div>
             <p className="text-xs text-muted-foreground">
               +20.1% from last month
             </p>
@@ -53,14 +64,16 @@ const AdminDashboard: React.FC = () => {
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Active Rentals</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Active Rentals
+            </CardTitle>
             <CalendarIcon className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{dashboardData.activeRentals}</div>
-            <p className="text-xs text-muted-foreground">
-              +15% from last week
-            </p>
+            <div className="text-2xl font-bold">
+              {dashboardData.activeRentals}
+            </div>
+            <p className="text-xs text-muted-foreground">+15% from last week</p>
           </CardContent>
         </Card>
         <Card>
@@ -69,7 +82,9 @@ const AdminDashboard: React.FC = () => {
             <CreditCardIcon className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">${dashboardData.totalRevenue.toLocaleString()}</div>
+            <div className="text-2xl font-bold">
+              ${dashboardData.totalRevenue.toLocaleString()}
+            </div>
             <p className="text-xs text-muted-foreground">
               +12.5% from last month
             </p>
@@ -77,14 +92,16 @@ const AdminDashboard: React.FC = () => {
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Available Cars</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Available Cars
+            </CardTitle>
             <CarIcon className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{dashboardData.availableCars}</div>
-            <p className="text-xs text-muted-foreground">
-              -3 from yesterday
-            </p>
+            <div className="text-2xl font-bold">
+              {dashboardData.availableCars}
+            </div>
+            <p className="text-xs text-muted-foreground">-3 from yesterday</p>
           </CardContent>
         </Card>
       </div>
@@ -167,12 +184,14 @@ const AdminDashboard: React.FC = () => {
       </Tabs>
 
       <div className="mt-8 flex space-x-4">
-        <Button onClick={() => router.push('/admin/cars')}>Manage Vehicles</Button>
+        <Button onClick={() => router.push('/admin/cars')}>
+          Manage Vehicles
+        </Button>
         <Button>View All Rentals</Button>
         <Button>Generate Report</Button>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default AdminDashboard;
+export default AdminDashboard

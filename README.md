@@ -25,18 +25,21 @@ LuxeDrive is a modern, full-stack car rental application built for the Dominican
 ### Installation
 
 1. Clone the repository:
+
    ```
    git clone https://github.com/your-username/luxedrive-car-rental.git
    cd luxedrive-car-rental
    ```
 
 2. Install dependencies:
+
    ```
    npm install
    ```
 
 3. Set up environment variables:
    Create a `.env.local` file in the root directory and add the following:
+
    ```
    MONGODB_URI=mongodb://localhost:27017/car_rental_db
    NEXTAUTH_SECRET=your_nextauth_secret
@@ -44,6 +47,7 @@ LuxeDrive is a modern, full-stack car rental application built for the Dominican
    ```
 
 4. Start the development server:
+
    ```
    npm run dev
    ```

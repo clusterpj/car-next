@@ -1,59 +1,72 @@
 import mongoose from 'mongoose'
 import bcrypt from 'bcryptjs'
 import validator from 'validator'
-import crypto from 'crypto';
+import crypto from 'crypto'
 
 export interface IUser extends mongoose.Document {
-  name: string;
-  email: string;
-  password: string;
-  role: 'admin' | 'customer' | 'manager';
-  isActive: boolean;
-  isEmailVerified: boolean;
-  lastLogin: Date;
-  passwordResetToken: string;
-  passwordResetExpires: Date;
-  phoneNumber?: string;
-  address?: string;
-  avatarUrl?: string;
-  oauthProvider?: string;
-  oauthId?: string;
-  createdAt: Date;
-  updatedAt: Date;
-  comparePassword(candidatePassword: string): Promise<boolean>;
-  generatePasswordResetToken(): Promise<string>;
+  name: string
+  email: string
+  password: string
+  role: 'admin' | 'customer' | 'manager'
+  isActive: boolean
+  isEmailVerified: boolean
+  lastLogin: Date
+  passwordResetToken: string
+  passwordResetExpires: Date
+  phoneNumber?: string
+  address?: string
+  avatarUrl?: string
+  oauthProvider?: string
+  oauthId?: string
+  createdAt: Date
+  updatedAt: Date
+  comparePassword(candidatePassword: string): Promise<boolean>
+  generatePasswordResetToken(): Promise<string>
 }
 
-const userSchema = new mongoose.Schema({
-  name: { type: String, required: true, trim: true },
-  email: { 
-    type: String, 
-    required: true, 
-    unique: true, 
-    trim: true, 
-    lowercase: true,
-    validate: [validator.isEmail, 'Please provide a valid email address']
+const userSchema = new mongoose.Schema(
+  {
+    name: { type: String, required: true, trim: true },
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      trim: true,
+      lowercase: true,
+      validate: [validator.isEmail, 'Please provide a valid email address'],
+    },
+    password: {
+      type: String,
+      required: true,
+      minlength: [8, 'Password must be at least 8 characters long'],
+      select: false, // Don't return password on queries
+    },
+    role: {
+      type: String,
+      enum: ['admin', 'customer', 'manager'],
+      default: 'customer',
+    },
+    isActive: { type: Boolean, default: true },
+    isEmailVerified: { type: Boolean, default: false },
+    lastLogin: { type: Date },
+    passwordResetToken: String,
+    passwordResetExpires: Date,
+    phoneNumber: {
+      type: String,
+      validate: [
+        validator.isMobilePhone,
+        'Please provide a valid phone number',
+      ],
+    },
+    address: String,
+    avatarUrl: String,
+    oauthProvider: String,
+    oauthId: String,
   },
-  password: { 
-    type: String, 
-    required: true,
-    minlength: [8, 'Password must be at least 8 characters long'],
-    select: false // Don't return password on queries
-  },
-  role: { type: String, enum: ['admin', 'customer', 'manager'], default: 'customer' },
-  isActive: { type: Boolean, default: true },
-  isEmailVerified: { type: Boolean, default: false },
-  lastLogin: { type: Date },
-  passwordResetToken: String,
-  passwordResetExpires: Date,
-  phoneNumber: { type: String, validate: [validator.isMobilePhone, 'Please provide a valid phone number'] },
-  address: String,
-  avatarUrl: String,
-  oauthProvider: String,
-  oauthId: String
-}, {
-  timestamps: true // Adds createdAt and updatedAt fields
-})
+  {
+    timestamps: true, // Adds createdAt and updatedAt fields
+  }
+)
 
 userSchema.pre('save', async function (next) {
   if (this.isModified('password')) {
@@ -62,11 +75,13 @@ userSchema.pre('save', async function (next) {
   next()
 })
 
-userSchema.methods.comparePassword = async function(candidatePassword: string): Promise<boolean> {
+userSchema.methods.comparePassword = async function (
+  candidatePassword: string
+): Promise<boolean> {
   if (!this.password) {
-    return false;
+    return false
   }
-  return bcrypt.compare(candidatePassword, this.password);
+  return bcrypt.compare(candidatePassword, this.password)
 }
 
 userSchema.methods.generatePasswordResetToken = async function () {
