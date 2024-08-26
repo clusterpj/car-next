@@ -1,20 +1,22 @@
-import React, { useState } from 'react'
-import { useForm, Controller } from 'react-hook-form'
-import { yupResolver } from '@hookform/resolvers/yup'
-import * as yup from 'yup'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Checkbox } from '@/components/ui/checkbox'
-import { IVehicle, IVehicleProps } from '@/models/Vehicle'
-import { createVehicle, updateVehicle } from '@/lib/api'
+// src/components/admin/VehicleForm.tsx
+import React, { useState, useCallback } from 'react';
+import { useForm, Controller } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
+import { IVehicle, IVehicleProps } from '@/models/Vehicle';
+import { createVehicle, updateVehicle, uploadImages } from '@/lib/api';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select'
-import { toast } from '@/components/ui/use-toast'
+} from "@/components/ui/select";
+import { toast } from '@/components/ui/use-toast';
+import { useDropzone } from 'react-dropzone';
 
 const schema = yup.object({
   make: yup.string().required('Make is required'),
@@ -42,7 +44,8 @@ const schema = yup.object({
     .oneOf(['economy', 'midsize', 'luxury', 'suv', 'van']),
   dailyRate: yup.number().required('Daily rate is required').min(0),
   isAvailable: yup.boolean().required('Availability is required'),
-})
+  images: yup.array().of(yup.mixed()).max(10, 'Maximum of 10 images allowed'),
+}).required();
 
 type VehicleFormData = yup.InferType<typeof schema>
 
@@ -52,62 +55,75 @@ interface VehicleFormProps {
 }
 
 const VehicleForm: React.FC<VehicleFormProps> = ({ vehicle, onSubmit }) => {
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const {
-    register,
-    handleSubmit,
-    control,
-    formState: { errors },
-  } = useForm<VehicleFormData>({
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [uploadedImages, setUploadedImages] = useState<string[]>(vehicle?.images || []);
+  const [primaryImage, setPrimaryImage] = useState<string>(vehicle?.primaryImage || '');
+  const [newImages, setNewImages] = useState<File[]>([]);
+
+  const { register, handleSubmit, control, formState: { errors }, setValue } = useForm<VehicleFormData>({
     resolver: yupResolver(schema),
-    defaultValues: vehicle
-      ? {
-          ...vehicle,
-          fuelType: vehicle.fuelType,
-          transmission: vehicle.transmission,
-          category: vehicle.category,
-          isAvailable: vehicle.isAvailable,
-        }
-      : {
-          isAvailable: false,
-        },
-  })
+    defaultValues: vehicle || {},
+  });
+
+  const onDrop = useCallback(async (acceptedFiles: File[]) => {
+    setNewImages(prev => [...prev, ...acceptedFiles]);
+    try {
+      const urls = await uploadImages(acceptedFiles);
+      setUploadedImages(prev => [...prev, ...urls]);
+      if (!primaryImage && urls.length > 0) {
+        setPrimaryImage(urls[0]);
+      }
+      setValue('images', [...uploadedImages, ...urls]);
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to upload images",
+        variant: "destructive",
+      });
+    }
+  }, [uploadedImages, primaryImage, setValue]);
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+    accept: {'image/*': []},
+    maxSize: 5 * 1024 * 1024, // 5MB
+    maxFiles: 10,
+  });
 
   const onSubmitForm = async (data: VehicleFormData) => {
-    console.log('Form submitted with data:', data)
-    setIsSubmitting(true)
+    setIsSubmitting(true);
     try {
-      let result: IVehicle
+      const vehicleData: Partial<IVehicle> = {
+        ...data,
+        images: uploadedImages,
+        primaryImage,
+        fuelType: data.fuelType as 'gasoline' | 'diesel' | 'electric' | 'hybrid',
+        transmission: data.transmission as 'automatic' | 'manual',
+        category: data.category as 'economy' | 'midsize' | 'luxury' | 'suv' | 'van',
+      };
+  
+      let result: IVehicle;
       if (vehicle) {
-        console.log('Updating existing vehicle')
-        result = await updateVehicle(
-          vehicle._id.toString(),
-          data as IVehicleProps
-        )
+        result = await updateVehicle(vehicle._id.toString(), vehicleData, newImages);
       } else {
-        console.log('Creating new vehicle')
-        result = await createVehicle(data as IVehicleProps)
+        result = await createVehicle(vehicleData, newImages);
       }
-      console.log('API response:', result)
-
+  
       toast({
-        title: vehicle ? 'Vehicle Updated' : 'Vehicle Created',
-        description: vehicle
-          ? 'The vehicle has been successfully updated.'
-          : 'A new vehicle has been successfully created.',
-      })
-      onSubmit()
+        title: vehicle ? "Vehicle Updated" : "Vehicle Created",
+        description: vehicle ? "The vehicle has been successfully updated." : "A new vehicle has been successfully created.",
+      });
+      onSubmit();
     } catch (error) {
-      console.error('Failed to save vehicle', error)
       toast({
-        title: 'Error',
+        title: "Error",
         description: `Failed to ${vehicle ? 'update' : 'create'} the vehicle. ${(error as Error).message}`,
-        variant: 'destructive',
-      })
+        variant: "destructive",
+      });
     } finally {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
-  }
+  };
 
   console.log('Current form errors:', errors)
 
@@ -139,6 +155,30 @@ const VehicleForm: React.FC<VehicleFormProps> = ({ vehicle, onSubmit }) => {
       {errors.mileage && (
         <p className="text-red-500">{errors.mileage.message}</p>
       )}
+
+      <div {...getRootProps()} className="border-2 border-dashed border-gray-300 rounded-lg p-4">
+        <input {...getInputProps()} />
+        {isDragActive ? (
+          <p>Drop the files here ...</p>
+        ) : (
+          <p>Drag 'n' drop some files here, or click to select files</p>
+        )}
+      </div>
+
+      <div className="grid grid-cols-5 gap-4">
+        {uploadedImages.map((image, index) => (
+          <div key={image} className="relative">
+            <img src={image} alt={`Vehicle ${index}`} className="w-full h-auto" />
+            <button
+              type="button"
+              onClick={() => setPrimaryImage(image)}
+              className={`absolute top-0 right-0 p-1 ${primaryImage === image ? 'bg-green-500' : 'bg-gray-500'} text-white rounded-full`}
+            >
+              Primary
+            </button>
+          </div>
+        ))}
+      </div>
 
       <Controller
         name="fuelType"

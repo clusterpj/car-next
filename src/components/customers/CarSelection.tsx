@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/components/ui/use-toast";
 import { fetchAvailableVehicles } from '@/lib/api';
+import NextImage from 'next/image'; // 
 
 interface CarSelectionProps {
     onSelectCar: (car: IVehicle) => void;
@@ -78,6 +79,15 @@ interface CarSelectionProps {
             <CardDescription>Year: {car.year}</CardDescription>
           </CardHeader>
           <CardContent>
+            {car.primaryImage && (
+              <NextImage // Use the aliased import
+                src={car.primaryImage}
+                alt={`${car.make} ${car.modelName}`}
+                width={300}
+                height={200}
+                className="w-full h-auto object-cover mb-4"
+              />
+            )}
             <p><strong>Category:</strong> {car.category}</p>
             <p><strong>Fuel Type:</strong> {car.fuelType}</p>
             <p><strong>Daily Rate:</strong> ${car.dailyRate.toFixed(2)}</p>
@@ -92,5 +102,4 @@ interface CarSelectionProps {
     </div>
   );
 };
-
 export default CarSelection;

@@ -32,35 +32,55 @@ export const fetchVehicles = async (): Promise<{ vehicles: IVehicle[] }> => {
 }
 
 export const createVehicle = async (
-  vehicleData: Partial<IVehicle>
+  vehicleData: Partial<IVehicle>,
+  newImages: File[]
 ): Promise<IVehicle> => {
   try {
-    const response = await api.post<IVehicle>('/vehicles', vehicleData)
-    return response.data
+    let imageUrls: string[] = vehicleData.images || [];
+    if (newImages.length > 0) {
+      const uploadedUrls = await uploadImages(newImages);
+      imageUrls = [...imageUrls, ...uploadedUrls];
+    }
+
+    const vehicleWithImages = {
+      ...vehicleData,
+      images: imageUrls,
+      primaryImage: vehicleData.primaryImage || imageUrls[0] || '',
+    };
+
+    const response = await api.post<IVehicle>('/vehicles', vehicleWithImages);
+    return response.data;
   } catch (error) {
-    console.error(
-      'Error creating vehicle:',
-      (error as AxiosError).response?.data || (error as Error).message
-    )
-    throw error
+    console.error('Error creating vehicle:', error);
+    throw error;
   }
-}
+};
 
 export const updateVehicle = async (
   id: string,
-  vehicleData: Partial<IVehicle>
+  vehicleData: Partial<IVehicle>,
+  newImages: File[]
 ): Promise<IVehicle> => {
   try {
-    const response = await api.put<IVehicle>(`/vehicles/${id}`, vehicleData)
-    return response.data
+    let imageUrls: string[] = vehicleData.images || [];
+    if (newImages.length > 0) {
+      const uploadedUrls = await uploadImages(newImages);
+      imageUrls = [...imageUrls, ...uploadedUrls];
+    }
+
+    const vehicleWithImages = {
+      ...vehicleData,
+      images: imageUrls,
+      primaryImage: vehicleData.primaryImage || imageUrls[0] || '',
+    };
+
+    const response = await api.put<IVehicle>(`/vehicles/${id}`, vehicleWithImages);
+    return response.data;
   } catch (error) {
-    console.error(
-      'Error updating vehicle:',
-      (error as AxiosError).response?.data || (error as Error).message
-    )
-    throw error
+    console.error('Error updating vehicle:', error);
+    throw error;
   }
-}
+};
 
 export const deleteVehicle = async (id: string): Promise<void> => {
   try {
@@ -93,6 +113,25 @@ export const createRental = async (rentalData: any): Promise<any> => {
     return response.data;
   } catch (error) {
     console.error('Error creating rental:', error);
+    throw error;
+  }
+};
+
+export const uploadImages = async (images: File[]): Promise<string[]> => {
+  const formData = new FormData();
+  images.forEach((image) => {
+    formData.append('images', image);
+  });
+
+  try {
+    const response = await api.post<{ urls: string[] }>('/upload', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return response.data.urls;
+  } catch (error) {
+    console.error('Error uploading images:', error);
     throw error;
   }
 };

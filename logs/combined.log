@@ -106,3 +106,26 @@
 2024-08-25 23:57:15:5715 [31merror[39m: [rentals-api] [31mAPI Error: Unauthorized[39m
 2024-08-25 23:57:16:5716 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for POST /api/rentals[39m
 2024-08-25 23:57:16:5716 [31merror[39m: [rentals-api] [31mAPI Error: Unauthorized[39m
+2024-08-26 11:36:13:3613 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles[39m
+2024-08-26 11:36:13:3613 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles[39m
+2024-08-26 11:36:31:3631 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles[39m
+2024-08-26 11:36:31:3631 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles[39m
+2024-08-26 11:36:45:3645 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles[39m
+2024-08-26 11:36:45:3645 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles[39m
+2024-08-26 11:38:06:386 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles[39m
+2024-08-26 12:14:24:1424 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles?isAvailable=true&startDate=2024-08-27&endDate=2024-08-28[39m
+2024-08-26 12:14:24:1424 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles?isAvailable=true&startDate=2024-08-27&endDate=2024-08-28[39m
+2024-08-26 12:14:32:1432 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles[39m
+2024-08-26 12:14:32:1432 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles[39m
+2024-08-26 12:32:10:3210 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles[39m
+2024-08-26 12:34:21:3421 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles[39m
+2024-08-26 12:34:43:3443 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for PUT /api/vehicles/66cbf505ba6818d84ed42502[39m
+2024-08-26 12:34:59:3459 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles?isAvailable=true&startDate=2024-08-27&endDate=2024-08-28[39m
+2024-08-26 12:34:59:3459 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles?isAvailable=true&startDate=2024-08-27&endDate=2024-08-28[39m
+2024-08-26 12:35:57:3557 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles[39m
+2024-08-26 12:35:57:3557 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles[39m
+2024-08-26 12:36:23:3623 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for PUT /api/vehicles/66cbf505ba6818d84ed42502[39m
+2024-08-26 12:36:42:3642 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles?isAvailable=true&startDate=2024-08-28&endDate=2024-08-29[39m
+2024-08-26 12:36:42:3642 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles?isAvailable=true&startDate=2024-08-28&endDate=2024-08-29[39m
+2024-08-26 12:37:15:3715 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for POST /api/rentals[39m
+2024-08-26 12:37:15:3715 [31merror[39m: [rentals-api] [31mAPI Error: Unauthorized[39m

@@ -349,6 +349,18 @@ async function handlePost(req: NextApiRequest): Promise<IVehicle> {
       : [],
   }
 
+  // Handle primary image
+  if (Array.isArray(vehicleData.images) && vehicleData.images.length > 0) {
+    vehicleData.primaryImage = vehicleData.images[0];
+  } else {
+    vehicleData.primaryImage = '';
+  }
+
+  // Ensure we don't exceed the maximum number of images
+  if (vehicleData.images && vehicleData.images.length > 10) {
+    vehicleData.images = vehicleData.images.slice(0, 10);
+  }
+
   if (sanitizedBody.lastServiced) {
     const lastServiced = sanitizeInput(sanitizedBody.lastServiced)
     if (typeof lastServiced === 'string' && !isNaN(Date.parse(lastServiced))) {

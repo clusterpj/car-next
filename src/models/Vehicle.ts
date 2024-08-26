@@ -22,6 +22,7 @@ export interface IVehicleProps {
     cost: number
   }[]
   images: string[]
+  primaryImage: string;
   lastServiced: Date
   nextServiceDue: Date
 }
@@ -107,6 +108,7 @@ const vehicleSchema = new Schema<IVehicle>(
       },
     ],
     images: [{ type: String, trim: true }],
+    primaryImage: { type: String, default: '' },
     lastServiced: { type: Date },
     nextServiceDue: { type: Date },
   },
@@ -116,6 +118,15 @@ const vehicleSchema = new Schema<IVehicle>(
     toObject: { virtuals: true },
   }
 )
+
+// Add a method to set the primary image
+vehicleSchema.methods.setPrimaryImage = function(imageUrl: string) {
+  if (this.images.includes(imageUrl)) {
+    this.primaryImage = imageUrl;
+  } else {
+    throw new Error('Image not found in vehicle images');
+  }
+};
 
 vehicleSchema.index({ make: 1, modelName: 1 })
 vehicleSchema.index({ category: 1, isAvailable: 1 })
