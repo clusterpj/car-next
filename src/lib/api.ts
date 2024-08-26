@@ -2,6 +2,7 @@
 import axios, { AxiosError } from 'axios'
 import { IVehicle } from '@/models/Vehicle'
 import { getSession } from 'next-auth/react'
+import { IRental } from '@/models/Rental'
 
 const api = axios.create({
   baseURL: '/api',
@@ -145,3 +146,23 @@ export const fetchRentalDetails = async (id: string): Promise<any> => {
     throw error;
   }
 };
+
+export const fetchRentals = async (page: number, limit: number, status?: string): Promise<{ data: IRental[], pagination: { currentPage: number, totalPages: number, totalItems: number } }> => {
+  try {
+    const response = await api.get<{ data: IRental[], pagination: { currentPage: number, totalPages: number, totalItems: number } }>('/rentals', { params: { page, limit, status } })
+    return response.data
+  } catch (error) {
+    console.error('Error fetching rentals:', error)
+    throw error
+  }
+}
+
+export const updateRentalStatus = async (id: string, status: string): Promise<IRental> => {
+  try {
+    const response = await api.put<{ data: IRental }>(`/rentals/${id}`, { status })
+    return response.data.data
+  } catch (error) {
+    console.error('Error updating rental status:', error)
+    throw error
+  }
+}

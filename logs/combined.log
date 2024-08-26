@@ -139,3 +139,12 @@
 2024-08-26 14:08:06:86 [32minfo[39m: [rentals-api] [32mNew rental created: 66ccc48658e4241869f7b153[39m
 2024-08-26 14:08:06:86 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/rentals/66ccc48658e4241869f7b153[39m
 2024-08-26 14:08:06:86 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/rentals/66ccc48658e4241869f7b153[39m
+2024-08-26 15:11:24:1124 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/rentals?page=1&limit=10[39m
+2024-08-26 15:11:24:1124 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/rentals?page=1&limit=10[39m
+2024-08-26 15:11:29:1129 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for PUT /api/rentals/66ccc48658e4241869f7b153[39m
+2024-08-26 15:11:29:1129 [31merror[39m: [rentals-api] [31mAPI Error: Unauthorized[39m
+2024-08-26 15:11:33:1133 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for PUT /api/rentals/66ccc48658e4241869f7b153[39m
+2024-08-26 15:11:33:1133 [31merror[39m: [rentals-api] [31mAPI Error: Unauthorized[39m
+2024-08-26 15:12:03:123 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/rentals?page=1&limit=10&status=pending[39m
+2024-08-26 15:12:06:126 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/rentals?page=1&limit=10&status=active[39m
+2024-08-26 15:12:08:128 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/rentals?page=1&limit=10[39m

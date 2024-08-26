@@ -187,7 +187,7 @@ const AdminDashboard: React.FC = () => {
         <Button onClick={() => router.push('/admin/cars')}>
           Manage Vehicles
         </Button>
-        <Button>View All Rentals</Button>
+        <Button onClick={() => router.push('/admin/rentals')}>Manage Rentals</Button>
         <Button>Generate Report</Button>
       </div>
     </div>
