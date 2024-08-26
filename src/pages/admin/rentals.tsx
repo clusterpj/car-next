@@ -10,6 +10,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useToast } from "@/components/ui/use-toast";
 import { fetchRentals, updateRentalStatus } from '@/lib/api';
 import { IRental } from '@/models/Rental';
+import { IUser } from '@/models/User';
+import { IVehicle } from '@/models/Vehicle';
 
 const AdminRentals: React.FC = () => {
   const [rentals, setRentals] = useState<IRental[]>([]);
@@ -25,7 +27,7 @@ const AdminRentals: React.FC = () => {
   const limit = 10; // Number of rentals per page
 
   useEffect(() => {
-    if (status === 'unauthenticated' || (session && session.user.role !== 'admin')) {
+    if (status === 'unauthenticated' || (session?.user.role !== 'admin')) {
       router.push('/');
     } else if (status === 'authenticated') {
       loadRentals();
@@ -57,7 +59,7 @@ const AdminRentals: React.FC = () => {
         title: "Success",
         description: `Rental status updated to ${newStatus}`,
       });
-      loadRentals(); // Reload rentals to reflect the change
+      loadRentals();
     } catch (err) {
       toast({
         title: "Error",
@@ -113,14 +115,14 @@ const AdminRentals: React.FC = () => {
               {rentals.map((rental) => (
                 <TableRow key={rental._id?.toString()}>
                   <TableCell>{rental._id?.toString().slice(-6)}</TableCell>
-                  <TableCell>{(rental.user as any).name}</TableCell>
-                  <TableCell>{`${(rental.vehicle as any).make} ${(rental.vehicle as any).modelName}`}</TableCell>
+                  <TableCell>{((rental.user as unknown) as IUser).name}</TableCell>
+                  <TableCell>{`${((rental.vehicle as unknown) as IVehicle).make} ${((rental.vehicle as unknown) as IVehicle).modelName}`}</TableCell>
                   <TableCell>{new Date(rental.startDate).toLocaleDateString()}</TableCell>
                   <TableCell>{new Date(rental.endDate).toLocaleDateString()}</TableCell>
                   <TableCell>{rental.status}</TableCell>
                   <TableCell>
                     <Select 
-                      onValueChange={(value) => handleStatusChange(rental._id?.toString() || '', value)}
+                      onValueChange={(value) => handleStatusChange(rental._id?.toString() ?? '', value)}
                       defaultValue={rental.status}
                     >
                       <SelectTrigger className="w-[180px]">

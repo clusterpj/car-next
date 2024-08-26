@@ -32,6 +32,16 @@ export const fetchVehicles = async (): Promise<{ vehicles: IVehicle[] }> => {
   }
 }
 
+export const fetchVehicleById = async (id: string): Promise<IVehicle> => {
+  try {
+    const response = await api.get<IVehicle>(`/vehicles/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching vehicle:', error);
+    throw error;
+  }
+};
+
 export const createVehicle = async (
   vehicleData: Partial<IVehicle>,
   newImages: File[]

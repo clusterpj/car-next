@@ -3,9 +3,13 @@ import type { AppProps } from 'next/app'
 import Layout from '@/components/Layout'
 import { SessionProvider } from 'next-auth/react'
 import '@/styles/globals.css'
+import { QueryClient, QueryClientProvider } from 'react-query'
+
+const queryClient = new QueryClient()
 
 function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   return (
+    <QueryClientProvider client={queryClient}>
     <SessionProvider session={session}>
       <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
         <Layout>
@@ -13,6 +17,7 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
         </Layout>
       </ThemeProvider>
     </SessionProvider>
+    </QueryClientProvider>
   )
 }
 
