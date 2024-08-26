@@ -12,6 +12,7 @@ import { corsMiddleware } from '@/middleware/cors';
 import { sanitizeInput } from '@/utils/sanitizer';
 import { MongoError } from 'mongodb';
 import mongoose from 'mongoose';
+import { getToken } from 'next-auth/jwt';
 
 const logger = createLogger('rentals-api');
 
@@ -96,10 +97,12 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
 }
 
 async function handlePost(req: NextApiRequest, res: NextApiResponse) {
-  const session = await getSession({ req });
-  if (!session) {
+  const token = await getToken({ req });
+  if (!token) {
     throw new ApiError(401, 'Unauthorized');
   }
+
+  const userId = token.sub; // Use the subject claim as the user ID
 
   const sanitizedBody = sanitizeInput(req.body) as SanitizedRentalInput;
   const {
@@ -146,7 +149,7 @@ async function handlePost(req: NextApiRequest, res: NextApiResponse) {
   const totalCost = days * vehicle.dailyRate;
 
   const newRental = new Rental({
-    user: session.user.id,
+    user: token.sub,
     vehicle: vehicleId,
     startDate: start,
     endDate: end,

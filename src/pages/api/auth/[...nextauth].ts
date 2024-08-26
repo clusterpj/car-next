@@ -84,7 +84,7 @@ export const authOptions: AuthOptions = {
     async session({ session, token }) {
       if (session.user) {
         session.user.role = token.role as string
-        session.user.id = token.id as string
+        session.user.id = token.sub as string // Use 'sub' instead of 'id'
       }
       return session
     },
