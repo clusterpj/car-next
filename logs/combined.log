@@ -133,3 +133,9 @@
 2024-08-26 13:00:55:055 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles?isAvailable=true&startDate=2024-08-27&endDate=2024-08-28[39m
 2024-08-26 13:02:44:244 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for POST /api/rentals[39m
 2024-08-26 13:02:45:245 [32minfo[39m: [rentals-api] [32mNew rental created: 66ccb53458e4241869f7b146[39m
+2024-08-26 14:07:57:757 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles?isAvailable=true&startDate=2024-08-29&endDate=2024-08-30[39m
+2024-08-26 14:07:57:757 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles?isAvailable=true&startDate=2024-08-29&endDate=2024-08-30[39m
+2024-08-26 14:08:06:86 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for POST /api/rentals[39m
+2024-08-26 14:08:06:86 [32minfo[39m: [rentals-api] [32mNew rental created: 66ccc48658e4241869f7b153[39m
+2024-08-26 14:08:06:86 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/rentals/66ccc48658e4241869f7b153[39m
+2024-08-26 14:08:06:86 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/rentals/66ccc48658e4241869f7b153[39m

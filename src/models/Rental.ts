@@ -4,8 +4,8 @@ import { IUser } from './User';
 import { IVehicle } from './Vehicle';
 
 export interface IRentalProps {
-  user: mongoose.Types.ObjectId | IUser;
-  vehicle: mongoose.Types.ObjectId | IVehicle;
+  user: mongoose.Types.ObjectId;
+  vehicle: mongoose.Types.ObjectId;
   startDate: Date;
   endDate: Date;
   totalCost: number;
@@ -18,12 +18,15 @@ export interface IRentalProps {
   paymentStatus: 'pending' | 'paid' | 'refunded';
 }
 
-export interface IRental extends IRentalProps, Document {
+export interface IRental extends Omit<IRentalProps, 'user' | 'vehicle'>, Document {
+  user: mongoose.Types.ObjectId;
+  vehicle: mongoose.Types.ObjectId;
   duration: number;
   isActive: boolean;
   cancel(): Promise<void>;
   complete(): Promise<void>;
 }
+
 
 // Extend the Mongoose Model interface
 interface IRentalModel extends Model<IRental> {

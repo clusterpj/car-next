@@ -1,18 +1,16 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getSession } from 'next-auth/react';
-import { MongoError } from 'mongodb';
-import mongoose from 'mongoose';
-
 import dbConnect from '@/lib/db';
 import Rental, { IRental } from '@/models/Rental';
 import { IUser } from '@/models/User';
-import { IVehicle } from '@/models/Vehicle';
 import { withAuth } from '@/middleware/auth';
 import { withRateLimit } from '@/middleware/rateLimit';
 import { validateRequest } from '@/middleware/validateRequest';
-import { corsMiddleware } from '@/middleware/cors';
 import { createLogger } from '@/utils/logger';
+import { corsMiddleware } from '@/middleware/cors';
 import { sanitizeInput, SanitizedInput } from '@/utils/sanitizer';
+import { MongoError } from 'mongodb';
+import mongoose from 'mongoose';
 
 const logger = createLogger('rentals-api');
 
@@ -23,7 +21,10 @@ class ApiError extends Error {
   }
 }
 
-async function handler(req: NextApiRequest, res: NextApiResponse) {
+async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
   const { id } = req.query;
   
   if (!id || typeof id !== 'string') {
@@ -49,9 +50,6 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   }
 }
 
-// File: src/pages/api/rentals/[id].ts
-// ... (keep the existing imports)
-
 async function handleGet(req: NextApiRequest, res: NextApiResponse, id: string) {
   const session = await getSession({ req });
   if (!session) {
@@ -60,44 +58,42 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse, id: string) 
 
   const rental = await Rental.findById(id)
     .populate<{ user: IUser }>('user', 'name email')
-    .populate<{ vehicle: IVehicle }>('vehicle', 'make modelName year')
-    .lean();
+    .populate('vehicle', 'make modelName year');
 
   if (!rental) {
     throw new ApiError(404, 'Rental not found');
   }
 
-  // Use type assertion here
-  const typedRental = rental as IRental & { user: IUser; vehicle: IVehicle };
-
+  // Check if the user is authorized to view this rental
   const isAdmin = session.user.role === 'admin';
-  const isOwner = typedRental.user._id.toString() === session.user.id;
+  const isOwner = rental.user._id.toString() === session.user.id;
 
   if (!isAdmin && !isOwner) {
     throw new ApiError(403, 'Forbidden');
   }
 
+  // Prepare the rental data to be returned
   const rentalData = {
-    _id: typedRental._id,
+    _id: rental._id,
     user: {
-      name: typedRental.user.name,
-      email: typedRental.user.email
+      name: rental.user.name,
+      email: rental.user.email
     },
     vehicle: {
-      make: typedRental.vehicle.make,
-      modelName: typedRental.vehicle.modelName,
-      year: typedRental.vehicle.year
+      make: rental.vehicle.make,
+      modelName: rental.vehicle.modelName,
+      year: rental.vehicle.year
     },
-    startDate: typedRental.startDate,
-    endDate: typedRental.endDate,
-    totalCost: typedRental.totalCost,
-    status: typedRental.status,
-    pickupLocation: typedRental.pickupLocation,
-    dropoffLocation: typedRental.dropoffLocation,
-    additionalDrivers: typedRental.additionalDrivers,
-    insuranceOption: typedRental.insuranceOption,
-    paymentMethod: typedRental.paymentMethod,
-    paymentStatus: typedRental.paymentStatus
+    startDate: rental.startDate,
+    endDate: rental.endDate,
+    totalCost: rental.totalCost,
+    status: rental.status,
+    pickupLocation: rental.pickupLocation,
+    dropoffLocation: rental.dropoffLocation,
+    additionalDrivers: rental.additionalDrivers,
+    insuranceOption: rental.insuranceOption,
+    paymentMethod: rental.paymentMethod,
+    paymentStatus: rental.paymentStatus
   };
 
   return res.status(200).json({ success: true, data: rentalData });

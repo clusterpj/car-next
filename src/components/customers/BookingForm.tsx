@@ -65,9 +65,9 @@ const BookingForm: React.FC<BookingFormProps> = ({ selectedCar, startDate, endDa
       });
       return;
     }
-
+  
     setIsSubmitting(true);
-
+  
     try {
       const rentalData = {
         ...data,
@@ -80,7 +80,7 @@ const BookingForm: React.FC<BookingFormProps> = ({ selectedCar, startDate, endDa
         title: "Success",
         description: "Your booking has been created successfully!",
       });
-      router.push(`/bookings/${result.data._id}`);
+      router.push(`/rentals/confirmation/${result.data._id}`);
     } catch (error: unknown) {
       let errorMessage = 'An error occurred while creating the booking';
       if (error instanceof Error) {
@@ -95,7 +95,6 @@ const BookingForm: React.FC<BookingFormProps> = ({ selectedCar, startDate, endDa
       setIsSubmitting(false);
     }
   };
-
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       <div>

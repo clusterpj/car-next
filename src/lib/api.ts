@@ -135,3 +135,13 @@ export const uploadImages = async (images: File[]): Promise<string[]> => {
     throw error;
   }
 };
+
+export const fetchRentalDetails = async (id: string): Promise<any> => {
+  try {
+    const response = await api.get(`/rentals/${id}`);
+    return response.data.data;
+  } catch (error) {
+    console.error('Error fetching rental details:', error);
+    throw error;
+  }
+};
