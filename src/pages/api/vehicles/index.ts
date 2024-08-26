@@ -1,5 +1,5 @@
 // File: src/pages/api/vehicles/index.ts
-
+import Rental from '@/models/Rental'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { getSession } from 'next-auth/react'
 import dbConnect from '@/lib/db'
@@ -114,6 +114,7 @@ interface MongoQuery {
     $gte?: number
     $lte?: number
   }
+  _id?: { $nin: any[] }
   isAvailable?: boolean
 }
 
@@ -210,9 +211,7 @@ async function handler(
   }
 }
 
-async function handleGet(
-  req: NextApiRequest
-): Promise<PaginatedVehicleResponse> {
+async function handleGet(req: NextApiRequest): Promise<PaginatedVehicleResponse> {
   const {
     page = 1,
     limit = 10,
@@ -228,7 +227,9 @@ async function handleGet(
     fuelType,
     transmission,
     fields,
-  } = sanitizeInput(req.query) as Record<string, SanitizedInput>
+    startDate,
+    endDate,
+  } = sanitizeInput(req.query) as Record<string, SanitizedInput>;
 
   const skip = (Number(page) - 1) * Number(limit)
 
@@ -246,6 +247,15 @@ async function handleGet(
   if (category) query.category = category as string
   if (fuelType) query.fuelType = fuelType as string
   if (transmission) query.transmission = transmission as string
+  if (isAvailable === 'true' && startDate && endDate) {
+    const unavailableVehicleIds = await Rental.distinct('vehicle', {
+      $or: [
+        { startDate: { $lt: new Date(endDate as string) }, endDate: { $gt: new Date(startDate as string) } },
+        { startDate: { $gte: new Date(startDate as string), $lt: new Date(endDate as string) } },
+      ],
+    });
+    query._id = { $nin: unavailableVehicleIds };
+  }
 
   const sortOptions: Record<string, 1 | -1> = {
     [(sanitizeInput(sortBy as string) || 'createdAt') as string]:

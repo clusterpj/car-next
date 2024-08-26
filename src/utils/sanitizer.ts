@@ -10,31 +10,29 @@ export type SanitizedInput =
   | SanitizedInput[]
   | { [key: string]: SanitizedInput }
   | null
-export function sanitizeInput(input: unknown): SanitizedInput {
+
+export function sanitizeInput<T>(input: T): T {
   if (typeof input === 'string') {
     // Remove any characters that could be used for NoSQL injection
-    return input.replace(/[${}()]/g, '').trim()
-  } else if (typeof input === 'number' || typeof input === 'boolean') {
-    // Numbers and booleans can be returned as-is
-    return input
-  } else if (input instanceof Date) {
-    // Dates can be returned as-is
+    return input.replace(/[${}()]/g, '').trim() as T
+  } else if (typeof input === 'number' || typeof input === 'boolean' || input instanceof Date) {
+    // Numbers, booleans, and dates can be returned as-is
     return input
   } else if (Array.isArray(input)) {
     // Recursively sanitize array elements
-    return input.map(sanitizeInput)
+    return input.map(sanitizeInput) as T
   } else if (typeof input === 'object' && input !== null) {
     // Recursively sanitize object properties
-    const sanitizedObj: { [key: string]: SanitizedInput } = {}
+    const sanitizedObj: { [key: string]: any } = {}
     for (const [key, value] of Object.entries(input)) {
-      sanitizedObj[sanitizeInput(key) as string] = sanitizeInput(value)
+      sanitizedObj[key] = sanitizeInput(value)
     }
-    return sanitizedObj
+    return sanitizedObj as T
   }
   // For any other type, return null
-  return null
+  return null as T
 }
 
 export function sanitizeForRegex(input: string): string {
-  return escapeRegExp(sanitizeInput(input) as string)
+  return escapeRegExp(sanitizeInput(input))
 }

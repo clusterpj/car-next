@@ -73,3 +73,26 @@ export const deleteVehicle = async (id: string): Promise<void> => {
     throw error
   }
 }
+
+
+export const fetchAvailableVehicles = async (startDate: string, endDate: string): Promise<IVehicle[]> => {
+  try {
+    const response = await api.get<{ vehicles: IVehicle[] }>('/vehicles', {
+      params: { isAvailable: true, startDate, endDate }
+    });
+    return response.data.vehicles;
+  } catch (error) {
+    console.error('Error fetching available vehicles:', error);
+    throw error;
+  }
+};
+
+export const createRental = async (rentalData: any): Promise<any> => {
+  try {
+    const response = await api.post('/rentals', rentalData);
+    return response.data;
+  } catch (error) {
+    console.error('Error creating rental:', error);
+    throw error;
+  }
+};

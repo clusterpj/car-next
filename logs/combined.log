@@ -80,3 +80,29 @@
 2024-08-25 19:53:34:5334 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles[39m
 2024-08-25 19:53:54:5354 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for DELETE /api/vehicles/66cbbe50d437386b49978e59[39m
 2024-08-25 19:53:54:5354 [32minfo[39m: [vehicles-api] [32mVehicle deleted: 66cbbe50d437386b49978e59[39m
+2024-08-25 22:34:56:3456 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles[39m
+2024-08-25 23:13:52:1352 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles[39m
+2024-08-25 23:14:43:1443 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for POST /api/vehicles[39m
+2024-08-25 23:14:43:1443 [32minfo[39m: [vehicles-api] [32mNew vehicle created: 66cbf323bc9d38b5e044113f[39m
+2024-08-25 23:14:43:1443 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles[39m
+2024-08-25 23:21:57:2157 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles[39m
+2024-08-25 23:22:45:2245 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for POST /api/vehicles[39m
+2024-08-25 23:22:45:2245 [32minfo[39m: [vehicles-api] [32mNew vehicle created: 66cbf505ba6818d84ed42502[39m
+2024-08-25 23:22:45:2245 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles[39m
+2024-08-25 23:36:23:3623 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles?isAvailable=true&startDate=2024-08-26&endDate=2024-08-28[39m
+2024-08-25 23:41:40:4140 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles?isAvailable=true&startDate=2024-08-26&endDate=2024-08-27[39m
+2024-08-25 23:41:40:4140 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles?isAvailable=true&startDate=2024-08-26&endDate=2024-08-27[39m
+2024-08-25 23:45:26:4526 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles?isAvailable=true&startDate=2024-08-26&endDate=2024-08-30[39m
+2024-08-25 23:45:26:4526 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles?isAvailable=true&startDate=2024-08-26&endDate=2024-08-30[39m
+2024-08-25 23:45:46:4546 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for POST /api/rentals[39m
+2024-08-25 23:45:46:4546 [33mwarn[39m: [validate-request-middleware] [33mInvalid request body: {"totalCost":1000,"paymentMethod":"creditCard","insuranceOption":"basic","additionalDrivers":0,"dropoffLocation":"Santo DOmingo","pickupLocation":"Santiago","vehicleId":"66cbf323bc9d38b5e044113f","startDate":"2024-08-26","endDate":"2024-08-30"}[39m
+2024-08-25 23:45:59:4559 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for POST /api/rentals[39m
+2024-08-25 23:45:59:4559 [33mwarn[39m: [validate-request-middleware] [33mInvalid request body: {"totalCost":1000,"paymentMethod":"creditCard","insuranceOption":"basic","additionalDrivers":0,"dropoffLocation":"Santo DOmingo","pickupLocation":"Santiago","vehicleId":"66cbf323bc9d38b5e044113f","startDate":"2024-08-26","endDate":"2024-08-30"}[39m
+2024-08-25 23:56:22:5622 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles?isAvailable=true&startDate=2024-08-26&endDate=2024-08-29[39m
+2024-08-25 23:56:22:5622 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles?isAvailable=true&startDate=2024-08-26&endDate=2024-08-29[39m
+2024-08-25 23:56:46:5646 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for POST /api/rentals[39m
+2024-08-25 23:56:46:5646 [31merror[39m: [rentals-api] [31mAPI Error: Unauthorized[39m
+2024-08-25 23:57:15:5715 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for POST /api/rentals[39m
+2024-08-25 23:57:15:5715 [31merror[39m: [rentals-api] [31mAPI Error: Unauthorized[39m
+2024-08-25 23:57:16:5716 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for POST /api/rentals[39m
+2024-08-25 23:57:16:5716 [31merror[39m: [rentals-api] [31mAPI Error: Unauthorized[39m
