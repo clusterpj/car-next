@@ -1,7 +1,7 @@
 import type { NextPage } from 'next';
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { motion, useAnimation } from 'framer-motion';
 import { ChevronRightIcon } from '@heroicons/react/20/solid';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,15 +9,26 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/com
 
 const Home: NextPage = () => {
   const [email, setEmail] = useState('');
-  const [scale, setScale] = useState(1);
+  const [currentCar, setCurrentCar] = useState(0);
+  const controls = useAnimation();
+
+  const cars = [
+    { name: "BMW 5-Series", price: 516, image: "/images/bmw-5-series.jpg" },
+    { name: "Mercedes S-Class", price: 589, image: "/images/mercedes-s-class.jpg" },
+    { name: "Audi A8", price: 549, image: "/images/audi-a8.jpg" },
+  ];
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setScale((prevScale) => (prevScale === 1 ? 1.05 : 1));
-    }, 10000); // Change scale every 10 seconds
+    const interval = setInterval(() => {
+      setCurrentCar((prev) => (prev + 1) % cars.length);
+    }, 5000);
 
-    return () => clearInterval(timer);
+    return () => clearInterval(interval);
   }, []);
+
+  useEffect(() => {
+    controls.start({ opacity: [0, 1], y: [50, 0] });
+  }, [currentCar]);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -29,36 +40,76 @@ const Home: NextPage = () => {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <main>
-        {/* New Hero Section */}
+        {/* Enhanced Hero Section */}
         <section className="relative h-screen overflow-hidden">
           <motion.div
+            key={currentCar}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 1 }}
             className="absolute inset-0"
-            animate={{ scale }}
-            transition={{ duration: 10, ease: "easeInOut" }}
           >
             <Image
-              src="/images/ferrari.jpg"
-              alt="BMW 5-Series on a scenic road"
+              src={cars[currentCar].image}
+              alt={`${cars[currentCar].name} on a scenic road`}
               layout="fill"
               objectFit="cover"
               quality={100}
             />
           </motion.div>
-          <div className="absolute inset-0 bg-black bg-opacity-40" />
-          <div className="relative z-10 flex flex-col justify-center h-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="absolute inset-0 bg-gradient-to-r from-black via-black/50 to-transparent" />
+          <motion.div
+            className="relative z-10 flex flex-col justify-center h-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
+            animate={controls}
+          >
             <div className="text-white">
-              <h2 className="text-5xl font-bold mb-2">2021</h2>
-              <h1 className="text-6xl font-bold mb-4">NEW BMW 5-SERIES</h1>
-              <p className="text-7xl font-bold text-orange-500 mb-4">$516<span className="text-4xl">/MO</span></p>
-              <p className="text-2xl mb-6">FOR 36 MONTH</p>
-              <p className="text-lg mb-2">$0 at signing after $1,750 cash back</p>
-              <p className="text-lg mb-4">$0 first payment paid by Ford up to $325</p>
-              <p className="text-sm mb-6">Taxes, title and fees extra.</p>
-              <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white">
-                LEARN MORE
-              </Button>
+              <motion.h2
+                className="text-5xl font-bold mb-2"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+              >
+                2023
+              </motion.h2>
+              <motion.h1
+                className="text-6xl font-bold mb-4"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 }}
+              >
+                NEW {cars[currentCar].name.toUpperCase()}
+              </motion.h1>
+              <motion.p
+                className="text-7xl font-bold text-orange-500 mb-4"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.6 }}
+              >
+                ${cars[currentCar].price}<span className="text-4xl">/MO</span>
+              </motion.p>
+              <motion.p
+                className="text-2xl mb-6"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.8 }}
+              >
+                FOR 36 MONTHS
+              </motion.p>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 1 }}
+              >
+                <p className="text-lg mb-2">$0 at signing after $2,000 cash back</p>
+                <p className="text-lg mb-4">$0 first payment paid by LuxeDrive up to $500</p>
+                <p className="text-sm mb-6">Taxes, title and fees extra.</p>
+                <Button size="lg" className="bg-orange-500 hover:bg-orange-600 text-white">
+                  RESERVE NOW
+                </Button>
+              </motion.div>
             </div>
-          </div>
+          </motion.div>
         </section>
 
         {/* Existing Content */}
@@ -156,21 +207,35 @@ const Home: NextPage = () => {
                 <CardContent>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                     {['Mercedes-Benz S-Class', 'BMW 7 Series', 'Audi A8'].map((car, index) => (
-                      <Card key={index} className="overflow-hidden">
-                        <Image
-                          src={`/images/car-${index + 1}.jpg`}
-                          alt={car}
-                          width={300}
-                          height={200}
-                          className="w-full object-cover h-48"
-                        />
-                        <CardContent className="p-4 text-center">
-                          <h3 className="text-xl font-semibold mb-2">{car}</h3>
-                          <Button variant="outline" className="rounded-full">
-                            Book Now
-                          </Button>
-                        </CardContent>
-                      </Card>
+                      <motion.div
+                        key={index}
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                      >
+                        <Card className="overflow-hidden cursor-pointer">
+                          <div className="relative">
+                            <Image
+                              src={`/images/car-${index + 1}.jpg`}
+                              alt={car}
+                              width={300}
+                              height={200}
+                              className="w-full object-cover h-48"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-4">
+                              <Button variant="secondary" className="rounded-full">
+                                View Details
+                              </Button>
+                            </div>
+                          </div>
+                          <CardContent className="p-4 text-center">
+                            <h3 className="text-xl font-semibold mb-2">{car}</h3>
+                            <p className="text-sm text-muted-foreground mb-4">Experience luxury and performance</p>
+                            <Button variant="outline" className="rounded-full">
+                              Book Now
+                            </Button>
+                          </CardContent>
+                        </Card>
+                      </motion.div>
                     ))}
                   </div>
                 </CardContent>
@@ -228,22 +293,36 @@ const Home: NextPage = () => {
               transition={{ duration: 0.8 }}
               viewport={{ once: true }}
             >
-              <Card className="mb-16">
+              <Card className="mb-16 bg-gradient-to-r from-purple-500 to-pink-500 text-white">
                 <CardHeader>
-                  <CardTitle className="text-3xl font-bold text-center">Stay Updated with Our Latest Offers</CardTitle>
+                  <CardTitle className="text-3xl font-bold text-center">Join the LuxeDrive Club</CardTitle>
+                  <CardDescription className="text-center text-white/80">Get exclusive offers and updates</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <form onSubmit={handleSubmit} className="flex flex-col md:flex-row justify-center items-center">
-                    <Input
-                      type="email"
-                      placeholder="Enter your email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      className="w-full md:w-auto mb-4 md:mb-0 md:mr-4"
-                      required
-                    />
-                    <Button type="submit" className="w-full md:w-auto">
-                      Subscribe
+                    <div className="relative w-full md:w-auto mb-4 md:mb-0 md:mr-4">
+                      <Input
+                        type="email"
+                        placeholder="Enter your email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        className="w-full pl-10 bg-white/20 text-white placeholder-white/60 border-white/40"
+                        required
+                      />
+                      <svg
+                        className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-white/60"
+                        fill="none"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                      </svg>
+                    </div>
+                    <Button type="submit" className="w-full md:w-auto bg-white text-purple-500 hover:bg-white/90">
+                      Join Now
                     </Button>
                   </form>
                 </CardContent>
