@@ -1,7 +1,7 @@
 import type { NextPage } from 'next';
 import Image from 'next/image';
 import { useState, useEffect, useMemo, useCallback } from 'react';
-import { motion, useAnimation } from 'framer-motion';
+import { motion, useAnimation, Variants } from 'framer-motion';
 import { ChevronRightIcon } from '@heroicons/react/20/solid';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -37,10 +37,10 @@ const Home: NextPage = () => {
     setEmail('');
   }, [email]);
 
-  const fadeInUpVariants = {
+  const fadeInUpVariants: Variants = useMemo(() => ({
     initial: { opacity: 0, y: 20 },
     animate: { opacity: 1, y: 0 },
-  };
+  }), []);
 
   return (
     <div className="min-h-screen bg-background text-foreground">
