@@ -1,6 +1,6 @@
 import type { NextPage } from 'next';
 import Image from 'next/image';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { motion, useAnimation } from 'framer-motion';
 import { ChevronRightIcon } from '@heroicons/react/20/solid';
 import { Button } from "@/components/ui/button";
@@ -12,11 +12,11 @@ const Home: NextPage = () => {
   const [currentCar, setCurrentCar] = useState(0);
   const controls = useAnimation();
 
-  const cars = [
+  const cars = useMemo(() => [
     { name: "BMW 5-Series", price: 516, image: "/images/bmw-5-series.jpg" },
     { name: "Mercedes S-Class", price: 589, image: "/images/mercedes-s-class.jpg" },
     { name: "Audi A8", price: 549, image: "/images/audi-a8.jpg" },
-  ];
+  ], []);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -24,17 +24,22 @@ const Home: NextPage = () => {
     }, 5000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [cars.length]);
 
   useEffect(() => {
     controls.start({ opacity: [0, 1], y: [50, 0] });
-  }, [currentCar]);
+  }, [currentCar, controls]);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = useCallback((e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     // TODO: Implement newsletter signup logic
     console.log('Submitting email:', email);
     setEmail('');
+  }, [email]);
+
+  const fadeInUpVariants = {
+    initial: { opacity: 0, y: 20 },
+    animate: { opacity: 1, y: 0 },
   };
 
   return (
@@ -66,39 +71,44 @@ const Home: NextPage = () => {
             <div className="text-white">
               <motion.h2
                 className="text-5xl font-bold mb-2"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
+                variants={fadeInUpVariants}
+                initial="initial"
+                animate="animate"
                 transition={{ delay: 0.2 }}
               >
                 2023
               </motion.h2>
               <motion.h1
                 className="text-6xl font-bold mb-4"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
+                variants={fadeInUpVariants}
+                initial="initial"
+                animate="animate"
                 transition={{ delay: 0.4 }}
               >
                 NEW {cars[currentCar].name.toUpperCase()}
               </motion.h1>
               <motion.p
                 className="text-7xl font-bold text-orange-500 mb-4"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
+                variants={fadeInUpVariants}
+                initial="initial"
+                animate="animate"
                 transition={{ delay: 0.6 }}
               >
                 ${cars[currentCar].price}<span className="text-4xl">/MO</span>
               </motion.p>
               <motion.p
                 className="text-2xl mb-6"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
+                variants={fadeInUpVariants}
+                initial="initial"
+                animate="animate"
                 transition={{ delay: 0.8 }}
               >
                 FOR 36 MONTHS
               </motion.p>
               <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
+                variants={fadeInUpVariants}
+                initial="initial"
+                animate="animate"
                 transition={{ delay: 1 }}
               >
                 <p className="text-lg mb-2">$0 at signing after $2,000 cash back</p>
