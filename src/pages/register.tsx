@@ -162,7 +162,7 @@ const RegisterPage = () => {
               </div>
 
               {error && (
-                <Alert variant="destructive">
+                <Alert variant="destructive" className="mb-4">
                   <AlertDescription>{error}</AlertDescription>
                 </Alert>
               )}

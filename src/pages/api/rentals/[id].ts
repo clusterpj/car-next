@@ -1,3 +1,4 @@
+// File: src/pages/api/rentals/[id].ts
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getSession } from 'next-auth/react';
 import { MongoError } from 'mongodb';
@@ -48,9 +49,6 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     return handleError(error, res);
   }
 }
-
-// File: src/pages/api/rentals/[id].ts
-// ... (keep the existing imports)
 
 async function handleGet(req: NextApiRequest, res: NextApiResponse, id: string) {
   const session = await getSession({ req });

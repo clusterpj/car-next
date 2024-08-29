@@ -120,9 +120,9 @@ const LoginPage = ({ csrfToken }: { csrfToken: string }) => {
                 </Link>
               </div>
               {error && (
-                <Alert variant="destructive">
-                  <AlertDescription>{error}</AlertDescription>
-                </Alert>
+                <Alert variant="destructive" className="mb-4">
+                <AlertDescription>{error}</AlertDescription>
+                </Alert> 
               )}
               <Button type="submit" className="w-full">
                 Sign in

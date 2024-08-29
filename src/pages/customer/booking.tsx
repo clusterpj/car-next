@@ -1,5 +1,5 @@
 // src/pages/customer/booking.tsx
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { NextPage } from 'next';
@@ -10,6 +10,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { fetchVehicleById } from '@/lib/api';
 
 const CustomerBooking: NextPage = () => {
   const { data: session, status } = useSession();
@@ -17,6 +18,17 @@ const CustomerBooking: NextPage = () => {
   const [selectedCar, setSelectedCar] = useState<IVehicle | null>(null);
   const [startDate, setStartDate] = useState<string>('');
   const [endDate, setEndDate] = useState<string>('');
+
+  useEffect(() => {
+    const { vehicleId } = router.query;
+    if (vehicleId && typeof vehicleId === 'string') {
+      fetchVehicleById(vehicleId).then(vehicle => {
+        setSelectedCar(vehicle);
+      }).catch(error => {
+        console.error('Error fetching vehicle:', error);
+      });
+    }
+  }, [router.query]);
 
   if (status === 'loading') { 
     return <div>Loading...</div>;
@@ -59,8 +71,8 @@ const CustomerBooking: NextPage = () => {
           </div>
         </CardContent>
       </Card>
-     
-      {startDate && endDate && (
+
+      {startDate && endDate && !selectedCar && (
         <Card className="mb-8">
           <CardHeader>
             <CardTitle>Select a Vehicle</CardTitle>

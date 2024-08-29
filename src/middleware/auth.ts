@@ -7,13 +7,16 @@ export function withAuth(handler: Function) {
     const token = await getToken({ req })
 
     if (!token) {
-      return res.status(401).json({ success: false, message: 'Unauthorized' })
+      return res.status(401).json({ success: false, message: "Unauthorized" })
+    }
+
+    if (req.method === 'GET') {
+      // Allow GET requests for all authenticated users
+      return handler(req, res)
     }
 
     if (token.role !== 'admin') {
-      return res
-        .status(403)
-        .json({ success: false, message: 'Forbidden: Admin access required' })
+      return res.status(403).json({ success: false, message: "Forbidden: Admin access required" })
     }
 
     return handler(req, res)

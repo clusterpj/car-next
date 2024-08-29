@@ -132,48 +132,49 @@ const Layout: React.FC<LayoutProps> = ({
                 <GlobeAltIcon className="h-6 w-6 text-white" />
               </button>
               {session ? (
-                <div className="relative">
-                  <button
-                    onClick={toggleUserMenu}
-                    className="flex items-center space-x-2 p-2 rounded-full hover:bg-blue-700 dark:hover:bg-gray-700"
-                  >
-                    <UserIcon className="h-6 w-6 text-white" />
-                    <span className="hidden lg:inline text-white">
-                      {session.user.name}
-                    </span>
-                  </button>
-                  {isUserMenuOpen && (
-                    <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg py-1">
-                      <div className="px-4 py-2 text-sm text-gray-700 dark:text-gray-200 border-b border-gray-200 dark:border-gray-700">
-                        <p className="font-semibold">{session.user.name}</p>
-                        <p className="text-xs flex items-center">
-                          <ShieldCheckIcon className="h-4 w-4 mr-1" />
-                          {userRole.charAt(0).toUpperCase() + userRole.slice(1)}
-                        </p>
-                      </div>
+              <div className="relative">
+                <button
+                  onClick={toggleUserMenu}
+                  className="flex items-center space-x-2 p-2 rounded-full hover:bg-blue-700 dark:hover:bg-gray-700"
+                >
+                  <UserIcon className="h-6 w-6 text-white" />
+                  <span className="hidden lg:inline text-white">
+                    {session.user.name}
+                  </span>
+                </button>
+                {isUserMenuOpen && (
+                  <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg py-1 z-50">
+                    <div className="px-4 py-2 text-sm text-gray-700 dark:text-gray-200 border-b border-gray-200 dark:border-gray-700">
+                      <p className="font-semibold">{session.user.name}</p>
+                      <p className="text-xs flex items-center">
+                        <ShieldCheckIcon className="h-4 w-4 mr-1" />
+                        {userRole.charAt(0).toUpperCase() + userRole.slice(1)}
+                      </p>
+                    </div>
+                    <Link
+                      href="/profile"
+                      className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                    >
+                      Profile
+                    </Link>
+                    {userRole === 'admin' && (
                       <Link
-                        href="/profile"
+                        href="/admin/dashboard"
                         className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
                       >
-                        Profile
+                        Admin Dashboard
                       </Link>
-                      {userRole === 'admin' && (
-                        <Link
-                          href="/admin/dashboard"
-                          className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
-                        >
-                          Admin Dashboard
-                        </Link>
-                      )}
-                      <button
-                        onClick={handleSignOut}
-                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
-                      >
-                        Sign out
-                      </button>
-                    </div>
-                  )}
-                </div>
+                    )}
+                    <button
+                      onClick={handleSignOut}
+                      className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                    >
+                      Sign out
+                    </button>
+                  </div>
+                )}
+              </div>
+
               ) : (
                 <button
                   onClick={handleSignIn}
