@@ -189,11 +189,12 @@ const AdminDashboard: React.FC = () => {
 }
 
 interface DashboardCardProps {
-  title: string
-  value: number | string
-  change: number
-  icon: React.ReactNode
+  title: string;
+  value?: number | string | null;
+  change?: number | null;
+  icon: React.ReactNode;
 }
+
 
 const DashboardCard: React.FC<DashboardCardProps> = ({ title, value, change, icon }) => (
   <Card>
@@ -202,13 +203,23 @@ const DashboardCard: React.FC<DashboardCardProps> = ({ title, value, change, ico
       {icon}
     </CardHeader>
     <CardContent>
-      <div className="text-2xl font-bold">{value}</div>
+      <div className="text-2xl font-bold">
+        {value !== null && value !== undefined ? value : 'N/A'}
+      </div>
       <p className="text-xs text-muted-foreground">
-        {change > 0 ? '+' : ''}{change.toFixed(1)}% from last period
+        {change !== null && change !== undefined ? (
+          <>
+            {change > 0 ? '+' : ''}
+            {change.toFixed(1)}% from last period
+          </>
+        ) : (
+          'No change data available'
+        )}
       </p>
     </CardContent>
   </Card>
 )
+
 
 const DashboardSkeleton: React.FC = () => (
   <div className="container mx-auto px-4 py-8">

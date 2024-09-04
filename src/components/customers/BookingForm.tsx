@@ -91,6 +91,7 @@ const BookingForm: React.FC<BookingFormProps> = ({ selectedCar, startDate, endDa
         description: errorMessage,
         variant: "destructive",
       });
+      console.error('Error creating rental:', error);
     } finally {
       setIsSubmitting(false);
     }

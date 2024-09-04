@@ -258,3 +258,24 @@
 2024-08-28 18:22:48:2248 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for POST /api/rentals[39m
 2024-08-28 18:22:50:2250 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for POST /api/rentals[39m
 2024-08-28 18:22:57:2257 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for POST /api/rentals[39m
+2024-09-04 08:55:24:5524 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles[39m
+2024-09-04 08:55:24:5524 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles[39m
+2024-09-04 09:02:44:244 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles[39m
+2024-09-04 09:02:44:244 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles[39m
+2024-09-04 09:09:23:923 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/rentals?page=1&limit=10[39m
+2024-09-04 09:09:23:923 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/rentals?page=1&limit=10[39m
+2024-09-04 09:11:31:1131 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles[39m
+2024-09-04 09:11:31:1131 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles[39m
+2024-09-04 09:11:34:1134 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles/66cbf505ba6818d84ed42502[39m
+2024-09-04 09:11:34:1134 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles/66cbf505ba6818d84ed42502[39m
+2024-09-04 09:21:17:2117 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for POST /api/rentals[39m
+2024-09-04 09:21:34:2134 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for POST /api/rentals[39m
+2024-09-04 09:24:52:2452 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles/66cbf505ba6818d84ed42502[39m
+2024-09-04 09:25:06:256 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for POST /api/rentals[39m
+2024-09-04 09:26:38:2638 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for POST /api/rentals[39m
+2024-09-04 10:06:35:635 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles/66cbf505ba6818d84ed42502[39m
+2024-09-04 10:09:14:914 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles/66cbf505ba6818d84ed42502[39m
+2024-09-04 10:09:33:933 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for POST /api/rentals[39m
+2024-09-04 10:09:33:933 [32minfo[39m: [rentals-api] [32mNew rental created: 66d86a1db27b5211c3420cba[39m
+2024-09-04 10:09:33:933 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/rentals/66d86a1db27b5211c3420cba[39m
+2024-09-04 10:09:33:933 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/rentals/66d86a1db27b5211c3420cba[39m

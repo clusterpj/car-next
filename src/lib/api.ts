@@ -12,7 +12,7 @@ const api = axios.create({
 api.interceptors.request.use(
   async (config) => {
     const session = await getSession()
-    if (session?.user) {
+    if (session) {
       config.headers['Authorization'] = `Bearer ${session.user.id}`
     }
     return config
@@ -123,6 +123,10 @@ export const createRental = async (rentalData: any): Promise<any> => {
     const response = await api.post('/rentals', rentalData);
     return response.data;
   } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.error('Error creating rental:', error.response?.data);
+      throw new Error(`Failed to create rental: ${error.response?.data?.message || error.message}`);
+    }
     console.error('Error creating rental:', error);
     throw error;
   }
