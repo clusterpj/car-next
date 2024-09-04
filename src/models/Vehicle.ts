@@ -108,7 +108,7 @@ const vehicleSchema = new Schema<IVehicle>(
       },
     ],
     images: [{ type: String, trim: true }],
-    primaryImage: { type: String, default: '' },
+    primaryImage: { type: String, trim: true },
     lastServiced: { type: Date },
     nextServiceDue: { type: Date },
   },

@@ -1,3 +1,4 @@
+// File: src/models/User.ts
 import mongoose from 'mongoose'
 import bcrypt from 'bcryptjs'
 import validator from 'validator'
@@ -15,6 +16,10 @@ export interface IUser extends mongoose.Document {
   passwordResetExpires: Date
   phoneNumber?: string
   address?: string
+  preferences?: {
+    carType?: string;
+    notificationPreferences?: string[];
+  };
   avatarUrl?: string
   oauthProvider?: string
   oauthId?: string
@@ -48,17 +53,18 @@ const userSchema = new mongoose.Schema(
     },
     isActive: { type: Boolean, default: true },
     isEmailVerified: { type: Boolean, default: false },
-    lastLogin: { type: Date },
+    lastLogin: { type: Date, default: Date.now },
     passwordResetToken: String,
     passwordResetExpires: Date,
-    phoneNumber: {
-      type: String,
-      validate: [
-        validator.isMobilePhone,
-        'Please provide a valid phone number',
-      ],
+    phoneNumber: { 
+      type: String, 
+      validate: [validator.isMobilePhone, 'Please provide a valid phone number'] 
     },
     address: String,
+    preferences: {
+      carType: String,
+      notificationPreferences: [String]
+    },
     avatarUrl: String,
     oauthProvider: String,
     oauthId: String,

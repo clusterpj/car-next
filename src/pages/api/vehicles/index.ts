@@ -74,7 +74,8 @@ const vehicleSchema = Yup.object().shape({
         .min(0, 'Cost must be non-negative'),
     })
   ),
-  images: Yup.array().of(Yup.string().url('Invalid image URL')),
+  images: Yup.array().of(Yup.string().nullable()),
+  primaryImage: Yup.string().nullable(),
   lastServiced: Yup.date(),
   nextServiceDue: Yup.date(),
 })
@@ -344,16 +345,17 @@ async function handlePost(req: NextApiRequest): Promise<IVehicle> {
           }
         })
       : [],
-    images: Array.isArray(sanitizedBody.images)
-      ? sanitizedBody.images.map((image) => sanitizeInput(image) as string)
+      images: Array.isArray(sanitizedBody.images)
+      ? sanitizedBody.images.filter((image): image is string => typeof image === 'string' && image.trim() !== '')
       : [],
+    primaryImage: typeof sanitizedBody.primaryImage === 'string' ? sanitizedBody.primaryImage : undefined,
   }
 
   // Handle primary image
-  if (Array.isArray(vehicleData.images) && vehicleData.images.length > 0) {
-    vehicleData.primaryImage = vehicleData.images[0];
+  if (vehicleData.images && vehicleData.images.length > 0) {
+    vehicleData.primaryImage = vehicleData.primaryImage || vehicleData.images[0];
   } else {
-    vehicleData.primaryImage = '';
+    vehicleData.primaryImage = undefined;
   }
 
   // Ensure we don't exceed the maximum number of images
@@ -375,12 +377,18 @@ async function handlePost(req: NextApiRequest): Promise<IVehicle> {
 
   const { isValid, errors } = await validateVehicleData(vehicleData)
   if (!isValid) {
+    logger.error(`Validation failed: ${errors.join(', ')}`, vehicleData);
     throw new ApiError(400, `Validation failed: ${errors.join(', ')}`)
   }
 
-  const vehicle = await Vehicle.create(vehicleData)
-  logger.info(`New vehicle created: ${vehicle._id}`)
-  return vehicle.toObject() as IVehicle
+  try {
+    const vehicle = await Vehicle.create(vehicleData)
+    logger.info(`New vehicle created: ${vehicle._id}`)
+    return vehicle.toObject() as IVehicle
+  } catch (error) {
+    logger.error('Error creating vehicle in database:', error);
+    throw error;
+  }
 }
 
 async function handlePut(req: NextApiRequest): Promise<IVehicle> {
@@ -457,35 +465,17 @@ function handleError(error: unknown, res: NextApiResponse) {
   logger.error('API Error:', error)
 
   if (error instanceof ApiError) {
-    res
-      .status(error.statusCode)
-      .json({ success: false, message: error.message })
+    return res.status(error.statusCode).json({ success: false, message: error.message })
   } else if (error instanceof MongoError) {
     if (error.code === 11000) {
-      res
-        .status(400)
-        .json({
-          success: false,
-          message: 'Duplicate key error. This item already exists.',
-        })
+      return res.status(400).json({ success: false, message: 'Duplicate key error. This item already exists.', error: error.message })
     } else {
-      res
-        .status(500)
-        .json({ success: false, message: 'Database error occurred' })
+      return res.status(500).json({ success: false, message: 'Database error occurred', error: error.message })
     }
   } else if (error instanceof Error) {
-    res
-      .status(500)
-      .json({
-        success: false,
-        message: 'Internal server error',
-        error: error.message,
-      })
+    return res.status(500).json({ success: false, message: 'Internal server error', error: error.message })
   } else {
-    res
-      .status(500)
-      .json({ success: false, message: 'An unknown error occurred' })
+    return res.status(500).json({ success: false, message: 'An unknown error occurred' })
   }
 }
-
 export default corsMiddleware(withRateLimit(withAuth(validateRequest(handler))))

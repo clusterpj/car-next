@@ -78,6 +78,10 @@ export const authOptions: AuthOptions = {
       if (user) {
         token.role = user.role
         token.id = user.id
+        // Update lastLogin for admin users
+        if (user.role === 'admin') {
+          await User.findByIdAndUpdate(user.id, { lastLogin: new Date() })
+        }
       }
       return token
     },

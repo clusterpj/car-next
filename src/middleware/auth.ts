@@ -11,6 +11,19 @@ export function withAuth(handler: Function) {
       return res.status(401).json({ success: false, message: "Unauthorized" });
     }
 
+   // Allow access to user profile for all authenticated users
+   if (req.url?.startsWith('/api/user/profile')) {
+     return handler(req, res);
+   }
+
+       // Allow access to admin profile only for admin users
+       if (req.url?.startsWith('/api/admin/profile')) {
+        if (token.role !== 'admin') {
+          return res.status(403).json({ success: false, message: "Forbidden: Admin access required" });
+        }
+        return handler(req, res);
+      }
+
     // Allow POST requests for all authenticated users (admins and customers)
     if (req.method === 'POST') {
       return handler(req, res);

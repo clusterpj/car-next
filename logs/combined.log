@@ -279,3 +279,46 @@
 2024-09-04 10:09:33:933 [32minfo[39m: [rentals-api] [32mNew rental created: 66d86a1db27b5211c3420cba[39m
 2024-09-04 10:09:33:933 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/rentals/66d86a1db27b5211c3420cba[39m
 2024-09-04 10:09:33:933 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/rentals/66d86a1db27b5211c3420cba[39m
+2024-09-04 10:59:39:5939 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/user/profile[39m
+2024-09-04 11:00:51:051 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/user/profile[39m
+2024-09-04 11:08:13:813 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/user/profile[39m
+2024-09-04 11:11:46:1146 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/user/profile[39m
+2024-09-04 11:12:08:128 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/user/profile[39m
+2024-09-04 11:12:08:128 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/user/profile[39m
+2024-09-04 11:13:18:1318 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/user/profile[39m
+2024-09-04 11:13:18:1318 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/user/profile[39m
+2024-09-04 11:16:33:1633 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles[39m
+2024-09-04 11:16:33:1633 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles[39m
+2024-09-04 12:51:38:5138 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/user/profile[39m
+2024-09-04 12:51:38:5138 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/user/profile[39m
+2024-09-04 12:51:49:5149 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles[39m
+2024-09-04 12:51:49:5149 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles[39m
+2024-09-04 13:06:21:621 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles[39m
+2024-09-04 13:06:21:621 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles[39m
+2024-09-04 13:13:41:1341 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/admin/profile[39m
+2024-09-04 13:13:41:1341 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/admin/profile[39m
+2024-09-04 13:15:31:1531 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles[39m
+2024-09-04 13:15:31:1531 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles[39m
+2024-09-04 19:19:24:1924 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles[39m
+2024-09-04 19:19:24:1924 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles[39m
+2024-09-04 19:22:44:2244 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles[39m
+2024-09-04 19:24:07:247 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for POST /api/vehicles[39m
+2024-09-04 19:24:07:247 [31merror[39m: [vehicles-api] [31mAPI Error: Validation failed: Invalid VIN format, Invalid image URL, Invalid image URL[39m
+2024-09-04 19:24:34:2434 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for POST /api/vehicles[39m
+2024-09-04 19:24:34:2434 [31merror[39m: [vehicles-api] [31mAPI Error: Validation failed: Invalid image URL, Invalid image URL[39m
+2024-09-04 19:25:16:2516 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for POST /api/vehicles[39m
+2024-09-04 19:25:16:2516 [31merror[39m: [vehicles-api] [31mAPI Error: Validation failed: Invalid image URL, Invalid image URL[39m
+2024-09-04 19:26:37:2637 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for POST /api/vehicles[39m
+2024-09-04 19:26:37:2637 [31merror[39m: [vehicles-api] [31mAPI Error: Validation failed: Invalid image URL, Invalid image URL[39m
+2024-09-04 19:31:17:3117 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles[39m
+2024-09-04 19:34:49:3449 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles[39m
+2024-09-04 19:37:02:372 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for POST /api/vehicles[39m
+2024-09-04 19:37:02:372 [31merror[39m: [vehicles-api] [31mValidation failed: Invalid license plate format, Invalid image URL, Invalid image URL[39m
+2024-09-04 19:37:02:372 [31merror[39m: [vehicles-api] [31mAPI Error: Validation failed: Invalid license plate format, Invalid image URL, Invalid image URL[39m
+2024-09-04 19:37:36:3736 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for POST /api/vehicles[39m
+2024-09-04 19:37:36:3736 [31merror[39m: [vehicles-api] [31mValidation failed: Invalid image URL, Invalid image URL[39m
+2024-09-04 19:37:36:3736 [31merror[39m: [vehicles-api] [31mAPI Error: Validation failed: Invalid image URL, Invalid image URL[39m
+2024-09-04 19:42:29:4229 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles[39m
+2024-09-04 19:44:16:4416 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for POST /api/vehicles[39m
+2024-09-04 19:44:16:4416 [32minfo[39m: [vehicles-api] [32mNew vehicle created: 66d8f0d07fe72310e678218d[39m
+2024-09-04 19:44:16:4416 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles[39m

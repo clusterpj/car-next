@@ -47,7 +47,7 @@ export const createVehicle = async (
   newImages: File[]
 ): Promise<IVehicle> => {
   try {
-    let imageUrls: string[] = vehicleData.images || [];
+    let imageUrls: string[] = vehicleData.images?.filter(url => url && url.trim() !== '') || [];
     if (newImages.length > 0) {
       const uploadedUrls = await uploadImages(newImages);
       imageUrls = [...imageUrls, ...uploadedUrls];
@@ -55,13 +55,17 @@ export const createVehicle = async (
 
     const vehicleWithImages = {
       ...vehicleData,
-      images: imageUrls,
-      primaryImage: vehicleData.primaryImage || imageUrls[0] || '',
+      images: imageUrls.length > 0 ? imageUrls : undefined,
+      primaryImage: vehicleData.primaryImage || (imageUrls.length > 0 ? imageUrls[0] : undefined),
     };
 
     const response = await api.post<IVehicle>('/vehicles', vehicleWithImages);
     return response.data;
   } catch (error) {
+    if (axios.isAxiosError(error) && error.response) {
+      console.error('Error creating vehicle:', error.response.data);
+      throw new Error(`Failed to create vehicle: ${error.response.data.message || error.message}`);
+    }
     console.error('Error creating vehicle:', error);
     throw error;
   }
@@ -180,3 +184,44 @@ export const updateRentalStatus = async (id: string, status: string): Promise<IR
     throw error
   }
 }
+
+export const fetchUserProfile = async (): Promise<any> => {
+  try {
+    const response = await api.get('/user/profile');
+    return response.data.data;
+  } catch (error) {
+    console.error('Error fetching user profile:', error);
+    throw error;
+  }
+};
+
+export const updateUserProfile = async (profileData: any): Promise<any> => {
+  try {
+    const response = await api.put('/user/profile', profileData);
+    return response.data.data;
+  } catch (error) {
+    console.error('Error updating user profile:', error);
+    throw error;
+  }
+};
+
+
+export const fetchAdminProfile = async (): Promise<any> => {
+  try {
+    const response = await api.get('/admin/profile');
+    return response.data.data;
+  } catch (error) {
+    console.error('Error fetching admin profile:', error);
+    throw error;
+  }
+};
+
+export const updateAdminProfile = async (profileData: any): Promise<any> => {
+  try {
+    const response = await api.put('/admin/profile', profileData);
+    return response.data.data;
+  } catch (error) {
+    console.error('Error updating admin profile:', error);
+    throw error;
+  }
+};

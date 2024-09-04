@@ -23,3 +23,11 @@
 2024-08-26 17:29:38:2938 [31merror[39m: [rentals-api] [31mAPI Error: Unauthorized[39m
 2024-08-26 17:29:56:2956 [31merror[39m: [rentals-api] [31mAPI Error: Unauthorized[39m
 2024-08-26 17:30:00:300 [31merror[39m: [rentals-api] [31mAPI Error: Unauthorized[39m
+2024-09-04 19:24:07:247 [31merror[39m: [vehicles-api] [31mAPI Error: Validation failed: Invalid VIN format, Invalid image URL, Invalid image URL[39m
+2024-09-04 19:24:34:2434 [31merror[39m: [vehicles-api] [31mAPI Error: Validation failed: Invalid image URL, Invalid image URL[39m
+2024-09-04 19:25:16:2516 [31merror[39m: [vehicles-api] [31mAPI Error: Validation failed: Invalid image URL, Invalid image URL[39m
+2024-09-04 19:26:37:2637 [31merror[39m: [vehicles-api] [31mAPI Error: Validation failed: Invalid image URL, Invalid image URL[39m
+2024-09-04 19:37:02:372 [31merror[39m: [vehicles-api] [31mValidation failed: Invalid license plate format, Invalid image URL, Invalid image URL[39m
+2024-09-04 19:37:02:372 [31merror[39m: [vehicles-api] [31mAPI Error: Validation failed: Invalid license plate format, Invalid image URL, Invalid image URL[39m
+2024-09-04 19:37:36:3736 [31merror[39m: [vehicles-api] [31mValidation failed: Invalid image URL, Invalid image URL[39m
+2024-09-04 19:37:36:3736 [31merror[39m: [vehicles-api] [31mAPI Error: Validation failed: Invalid image URL, Invalid image URL[39m
