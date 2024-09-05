@@ -322,3 +322,11 @@
 2024-09-04 19:44:16:4416 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for POST /api/vehicles[39m
 2024-09-04 19:44:16:4416 [32minfo[39m: [vehicles-api] [32mNew vehicle created: 66d8f0d07fe72310e678218d[39m
 2024-09-04 19:44:16:4416 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles[39m
+2024-09-04 19:45:40:4540 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles[39m
+2024-09-04 19:45:40:4540 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles[39m
+2024-09-04 20:00:18:018 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles[39m
+2024-09-04 20:00:18:018 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/vehicles[39m
+2024-09-04 20:00:25:025 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/rentals?page=1&limit=10[39m
+2024-09-04 20:00:25:025 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/rentals?page=1&limit=10[39m
+2024-09-04 20:00:59:059 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/admin/profile[39m
+2024-09-04 20:00:59:059 [32minfo[39m: [rate-limit-middleware] [32mRate limit check for GET /api/admin/profile[39m

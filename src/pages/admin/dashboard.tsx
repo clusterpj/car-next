@@ -3,6 +3,7 @@ import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import { useQuery } from 'react-query'
 import axios from 'axios'
+import { useTheme } from 'next-themes'
 import {
   Card,
   CardContent,
@@ -12,7 +13,7 @@ import {
 } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { CalendarIcon, CarIcon, CreditCardIcon, UserIcon } from 'lucide-react'
+import { CalendarIcon, CarIcon, CreditCardIcon, UserIcon, BarChart2Icon, SettingsIcon, SunIcon, MoonIcon } from 'lucide-react'
 import { Skeleton } from '@/components/ui/skeleton'
 import {
   Table,
@@ -24,28 +25,9 @@ import {
 } from '@/components/ui/table'
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from 'recharts'
 
-interface RecentRental {
-  _id: string
-  user: { name: string; email: string }
-  vehicle: { make: string; modelName: string }
-  startDate: string
-  endDate: string
-  totalCost: number
-}
-
-interface PopularVehicle {
-  vehicle: string
-  count: number
-}
-
-interface ExtendedDashboardData extends DashboardData {
-  recentRentals: RecentRental[]
-  popularVehicles: PopularVehicle[]
-}
-
 interface DashboardData {
-  popularVehicles: any[] | undefined
-  recentRentals: any
+  popularVehicles: any[]
+  recentRentals: any[]
   totalRentals: number
   activeRentals: number
   totalRevenue: number
@@ -63,13 +45,10 @@ const AdminDashboard: React.FC = () => {
   const { data: session, status } = useSession()
   const router = useRouter()
   const { data: dashboardData, isLoading, error } = useQuery<DashboardData, Error>('dashboardData', fetchDashboardData)
+  const { theme, setTheme } = useTheme()
 
-  // Redirect if not authenticated or not an admin
   React.useEffect(() => {
-    if (
-      status === 'unauthenticated' ||
-      (session && session.user.role !== 'admin')
-    ) {
+    if (status === 'unauthenticated' || (session && session.user.role !== 'admin')) {
       router.push('/')
     }
   }, [session, status, router])
@@ -86,115 +65,163 @@ const AdminDashboard: React.FC = () => {
     return null
   }
 
+  const toggleTheme = () => {
+    setTheme(theme === 'light' ? 'dark' : 'light')
+  }
+
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-8">Admin Dashboard</h1>
+    <div className="flex h-screen bg-gray-100 dark:bg-gray-900">
+      {/* Sidebar */}
+      <aside className="w-64 bg-white dark:bg-gray-800 shadow-md">
+        <div className="p-4">
+          <h2 className="text-2xl font-semibold text-gray-800 dark:text-white">Admin Dashboard</h2>
+        </div>
+        <nav className="mt-6">
+          <Button variant="ghost" className="w-full justify-start text-gray-600 dark:text-gray-300" onClick={() => router.push('/admin/dashboard')}>
+            <BarChart2Icon className="mr-2 h-4 w-4" />
+            Overview
+          </Button>
+          <Button variant="ghost" className="w-full justify-start text-gray-600 dark:text-gray-300" onClick={() => router.push('/admin/cars')}>
+            <CarIcon className="mr-2 h-4 w-4" />
+            Manage Vehicles
+          </Button>
+          <Button variant="ghost" className="w-full justify-start text-gray-600 dark:text-gray-300" onClick={() => router.push('/admin/rentals')}>
+            <CalendarIcon className="mr-2 h-4 w-4" />
+            Manage Rentals
+          </Button>
+          <Button variant="ghost" className="w-full justify-start text-gray-600 dark:text-gray-300" onClick={() => router.push('/admin/users')}>
+            <UserIcon className="mr-2 h-4 w-4" />
+            Manage Users
+          </Button>
+          <Button variant="ghost" className="w-full justify-start text-gray-600 dark:text-gray-300" onClick={() => router.push('/admin/settings')}>
+            <SettingsIcon className="mr-2 h-4 w-4" />
+            Settings
+          </Button>
+        </nav>
+        <div className="absolute bottom-4 left-4">
+          <Button variant="outline" size="icon" onClick={toggleTheme}>
+            {theme === 'light' ? <MoonIcon className="h-[1.2rem] w-[1.2rem]" /> : <SunIcon className="h-[1.2rem] w-[1.2rem]" />}
+          </Button>
+        </div>
+      </aside>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <DashboardCard
-          title="Total Rentals"
-          value={dashboardData.totalRentals}
-          change={dashboardData.percentChangeRentals}
-          icon={<CarIcon className="h-4 w-4 text-muted-foreground" />}
-        />
-        <DashboardCard
-          title="Active Rentals"
-          value={dashboardData.activeRentals}
-          change={dashboardData.percentChangeActiveRentals}
-          icon={<CalendarIcon className="h-4 w-4 text-muted-foreground" />}
-        />
-        <DashboardCard
-          title="Total Revenue"
-          value={`$${dashboardData.totalRevenue.toLocaleString()}`}
-          change={12.5} // This is still a placeholder as we don't calculate it in the API
-          icon={<CreditCardIcon className="h-4 w-4 text-muted-foreground" />}
-        />
-        <DashboardCard
-          title="Available Cars"
-          value={dashboardData.availableCars}
-          change={-3} // This is still a placeholder as we don't calculate it in the API
-          icon={<CarIcon className="h-4 w-4 text-muted-foreground" />}
-        />
-      </div>
+      {/* Main content */}
+      <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 dark:bg-gray-900">
+        <div className="container mx-auto px-6 py-8">
+          <h1 className="text-3xl font-semibold text-gray-800 dark:text-white mb-6">Dashboard Overview</h1>
+          
+          {/* KPI Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <DashboardCard
+              title="Total Rentals"
+              value={dashboardData.totalRentals}
+              change={dashboardData.percentChangeRentals}
+              icon={<CarIcon className="h-6 w-6 text-blue-500" />}
+            />
+            <DashboardCard
+              title="Active Rentals"
+              value={dashboardData.activeRentals}
+              change={dashboardData.percentChangeActiveRentals}
+              icon={<CalendarIcon className="h-6 w-6 text-green-500" />}
+            />
+            <DashboardCard
+              title="Total Revenue"
+              value={`$${dashboardData.totalRevenue.toLocaleString()}`}
+              change={12.5} // Placeholder
+              icon={<CreditCardIcon className="h-6 w-6 text-yellow-500" />}
+            />
+            <DashboardCard
+              title="Available Cars"
+              value={dashboardData.availableCars}
+              change={-3} // Placeholder
+              icon={<CarIcon className="h-6 w-6 text-purple-500" />}
+            />
+          </div>
 
-      <Tabs defaultValue="overview" className="space-y-4">
-        <TabsList>
-          <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="analytics">Analytics</TabsTrigger>
-          <TabsTrigger value="reports">Reports</TabsTrigger>
-          <TabsTrigger value="notifications">Notifications</TabsTrigger>
-        </TabsList>
-        <TabsContent value="overview" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Recent Rentals</CardTitle>
-              <CardDescription>
-                Overview of the most recent rental activities.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>User</TableHead>
-                    <TableHead>Vehicle</TableHead>
-                    <TableHead>Start Date</TableHead>
-                    <TableHead>End Date</TableHead>
-                    <TableHead>Total Cost</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {dashboardData.recentRentals.map((rental: { _id: React.Key | null | undefined; user: { name: string | number | bigint | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined }; vehicle: { make: any; modelName: any }; startDate: string | number | Date; endDate: string | number | Date; totalCost: number }) => (
-                    <TableRow key={rental._id}>
-                      <TableCell>{rental.user.name}</TableCell>
-                      <TableCell>{`${rental.vehicle.make} ${rental.vehicle.modelName}`}</TableCell>
-                      <TableCell>{new Date(rental.startDate).toLocaleDateString()}</TableCell>
-                      <TableCell>{new Date(rental.endDate).toLocaleDateString()}</TableCell>
-                      <TableCell>${rental.totalCost.toFixed(2)}</TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader>
-              <CardTitle>Popular Vehicles</CardTitle>
-              <CardDescription>
-                The most frequently rented vehicles this month.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={dashboardData.popularVehicles}>
-                  <XAxis dataKey="vehicle" />
-                  <YAxis />
-                  <Bar dataKey="count" fill="#8884d8" />
-                </BarChart>
-              </ResponsiveContainer>
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
+          {/* Tabs for different data views */}
+          <Tabs defaultValue="overview" className="space-y-4">
+            <TabsList>
+              <TabsTrigger value="overview">Overview</TabsTrigger>
+              <TabsTrigger value="rentals">Recent Rentals</TabsTrigger>
+              <TabsTrigger value="popular">Popular Vehicles</TabsTrigger>
+            </TabsList>
 
-      <div className="mt-8 flex space-x-4">
-        <Button onClick={() => router.push('/admin/cars')}>
-          Manage Vehicles
-        </Button>
-        <Button onClick={() => router.push('/admin/rentals')}>Manage Rentals</Button>
-        <Button>Generate Report</Button>
-      </div>
+            <TabsContent value="overview">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Rental Overview</CardTitle>
+                  <CardDescription>Summary of rental activities</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {/* Add a chart or summary here */}
+                  <p>Rental activity summary goes here.</p>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="rentals">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Recent Rentals</CardTitle>
+                  <CardDescription>Latest rental activities</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>User</TableHead>
+                        <TableHead>Vehicle</TableHead>
+                        <TableHead>Start Date</TableHead>
+                        <TableHead>End Date</TableHead>
+                        <TableHead>Total Cost</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {dashboardData.recentRentals.map((rental: any) => (
+                        <TableRow key={rental._id}>
+                          <TableCell>{rental.user.name}</TableCell>
+                          <TableCell>{`${rental.vehicle.make} ${rental.vehicle.modelName}`}</TableCell>
+                          <TableCell>{new Date(rental.startDate).toLocaleDateString()}</TableCell>
+                          <TableCell>{new Date(rental.endDate).toLocaleDateString()}</TableCell>
+                          <TableCell>${rental.totalCost.toFixed(2)}</TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="popular">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Popular Vehicles</CardTitle>
+                  <CardDescription>Most frequently rented vehicles</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <ResponsiveContainer width="100%" height={300}>
+                    <BarChart data={dashboardData.popularVehicles}>
+                      <XAxis dataKey="vehicle" />
+                      <YAxis />
+                      <Bar dataKey="count" fill="#8884d8" />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </CardContent>
+              </Card>
+            </TabsContent>
+          </Tabs>
+        </div>
+      </main>
     </div>
   )
 }
 
 interface DashboardCardProps {
-  title: string;
-  value?: number | string | null;
-  change?: number | null;
-  icon: React.ReactNode;
+  title: string
+  value: number | string
+  change: number
+  icon: React.ReactNode
 }
-
 
 const DashboardCard: React.FC<DashboardCardProps> = ({ title, value, change, icon }) => (
   <Card>
@@ -203,23 +230,13 @@ const DashboardCard: React.FC<DashboardCardProps> = ({ title, value, change, ico
       {icon}
     </CardHeader>
     <CardContent>
-      <div className="text-2xl font-bold">
-        {value !== null && value !== undefined ? value : 'N/A'}
-      </div>
+      <div className="text-2xl font-bold">{value}</div>
       <p className="text-xs text-muted-foreground">
-        {change !== null && change !== undefined ? (
-          <>
-            {change > 0 ? '+' : ''}
-            {change.toFixed(1)}% from last period
-          </>
-        ) : (
-          'No change data available'
-        )}
+        {change > 0 ? '+' : ''}{change.toFixed(1)}% from last period
       </p>
     </CardContent>
   </Card>
 )
-
 
 const DashboardSkeleton: React.FC = () => (
   <div className="container mx-auto px-4 py-8">
