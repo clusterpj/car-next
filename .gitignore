@@ -1,0 +1,20 @@
+# deps
+node_modules/
+.pnp/
+.next/
+out/
+
+# env — never commit real secrets
+.env
+.env.*
+!.env.example
+
+# runtime logs / artifacts
+logs/
+*.log
+npm-debug.log*
+
+
+# misc
+.DS_Store
+.vercel
